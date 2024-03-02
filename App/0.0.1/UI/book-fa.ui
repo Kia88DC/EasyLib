@@ -417,7 +417,7 @@ border-color: rgb(255, 255, 255);
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QFrame" name="frame_acc_3">
+    <widget class="QFrame" name="frame_comp2">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -442,7 +442,7 @@ background-color: rgb(255, 251, 230);</string>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QLabel" name="lbl_acc_3_title">
+     <widget class="QLabel" name="lbl_comp2_title">
       <property name="geometry">
        <rect>
         <x>260</x>
@@ -468,7 +468,7 @@ color: rgb(50, 50, 50);</string>
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbl_UserCount_4">
+     <widget class="QLabel" name="lbl_delBook_title">
       <property name="geometry">
        <rect>
         <x>190</x>
@@ -498,7 +498,7 @@ background-color: rgb(255, 240, 200);</string>
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbl_UserCount_5">
+     <widget class="QLabel" name="lbl_delBook_author">
       <property name="geometry">
        <rect>
         <x>190</x>
@@ -528,7 +528,7 @@ background-color: rgb(255, 240, 200);</string>
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbl_UserCount_6">
+     <widget class="QLabel" name="lbl_delBook_category">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -558,7 +558,7 @@ background-color: rgb(255, 240, 200);</string>
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbl_UserCount_7">
+     <widget class="QLabel" name="lbl_delBook_book_code">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -588,7 +588,7 @@ background-color: rgb(255, 240, 200);</string>
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_text_save_3">
+     <widget class="QPushButton" name="btn_delBook_submit">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -629,11 +629,11 @@ QPushButton:pressed {
 }</string>
       </property>
       <property name="text">
-       <string>ذخیره</string>
+       <string>حذف</string>
       </property>
      </widget>
     </widget>
-    <widget class="QFrame" name="frame_acc_1">
+    <widget class="QFrame" name="frame_comp1">
      <property name="geometry">
       <rect>
        <x>390</x>
@@ -658,7 +658,7 @@ background-color: rgb(230, 245, 255);</string>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QLabel" name="lbl_acc_1_title">
+     <widget class="QLabel" name="lbl_comp1_title">
       <property name="geometry">
        <rect>
         <x>250</x>
@@ -684,7 +684,7 @@ color: rgb(50, 50, 50);</string>
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="input_add_title">
+     <widget class="QLineEdit" name="input_bookAdd_title">
       <property name="geometry">
        <rect>
         <x>190</x>
@@ -736,7 +736,7 @@ background-color: rgb(207, 234, 255);</string>
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QLineEdit" name="input_add_title_2">
+     <widget class="QLineEdit" name="input_bookAdd_author">
       <property name="geometry">
        <rect>
         <x>190</x>
@@ -788,7 +788,7 @@ background-color: rgb(207, 234, 255);</string>
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QLineEdit" name="input_add_title_3">
+     <widget class="QLineEdit" name="input_bookAdd_category">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -839,7 +839,7 @@ background-color: rgb(207, 234, 255);</string>
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_text_save_2">
+     <widget class="QPushButton" name="btn_bookAdd_submit">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -878,10 +878,10 @@ QPushButton:pressed {
 }</string>
       </property>
       <property name="text">
-       <string>ذخیره</string>
+       <string>افزودن</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox">
+     <widget class="QCheckBox" name="ChBox_automatic_code">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -903,7 +903,7 @@ QPushButton:pressed {
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QLineEdit" name="input_add_title_4">
+     <widget class="QLineEdit" name="input_bookAdd_book_code">
       <property name="geometry">
        <rect>
         <x>90</x>
@@ -1028,32 +1028,6 @@ background-color: rgb(244, 244, 244);</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QPushButton" name="btn_view_moreinfo">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>55</y>
-       <width>16</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">border: 0px;</string>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>:/Next/Assets/Other/Next.png</normaloff>:/Next/Assets/Other/Next.png</iconset>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
@@ -1108,30 +1082,6 @@ background-color: rgb(244, 244, 244);</string>
       <string>موضوع:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_UserCount">
-     <property name="geometry">
-      <rect>
-       <x>330</x>
-       <y>90</y>
-       <width>250</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>16</pointsize>
-      </font>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_5">
      <property name="geometry">
       <rect>
@@ -1168,7 +1118,7 @@ background-color: rgb(244, 244, 244);</string>
       <string>تعداد بار امانت گرفته شدن:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="lbl_book_image">
      <property name="geometry">
       <rect>
        <x>660</x>
@@ -1210,54 +1160,6 @@ background-color: rgb(244, 244, 244);</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_UserCount_2">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>90</y>
-       <width>110</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>16</pointsize>
-      </font>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>0</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="lbl_UserCount_3">
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>10</y>
-       <width>170</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>16</pointsize>
-      </font>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>موجود</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_7">
      <property name="geometry">
       <rect>
@@ -1276,49 +1178,7 @@ background-color: rgb(244, 244, 244);</string>
       <string>کد کتاب:</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_text_save">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>50</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">/*
-border-width:1px;
-border-style:solid;
-border-radius: 12px;
-border-color: rgba(244, 244, 244, 0);
-background-color: rgb(225, 225, 225);
-color: rgb(50, 50, 50);
-*/
-
-QPushButton {
-	border-width:1px;
-	border-style:solid;
-	border-radius: 12px;
-	border-color: rgba(244, 244, 244, 0);
-	background-color: rgb(225, 225, 225);
-	color: rgb(50, 50, 50);
-}
-
-QPushButton:pressed {
-	background-color: rgb(200, 200, 200, 200);
-}</string>
-     </property>
-     <property name="text">
-      <string>ذخیره</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="input_username">
+    <widget class="QLineEdit" name="input_book_name">
      <property name="geometry">
       <rect>
        <x>330</x>
@@ -1329,7 +1189,7 @@ QPushButton:pressed {
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>15</pointsize>
       </font>
      </property>
      <property name="mouseTracking">
@@ -1370,7 +1230,7 @@ color: rgb(75, 75, 75);</string>
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QLineEdit" name="input_username_2">
+    <widget class="QLineEdit" name="input_book_author_name">
      <property name="geometry">
       <rect>
        <x>330</x>
@@ -1381,7 +1241,7 @@ color: rgb(75, 75, 75);</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>15</pointsize>
       </font>
      </property>
      <property name="mouseTracking">
@@ -1422,7 +1282,59 @@ color: rgb(75, 75, 75);</string>
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QLineEdit" name="input_username_3">
+    <widget class="QLineEdit" name="input_book_category">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>90</y>
+       <width>250</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="mouseTracking">
+      <bool>true</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(233, 233, 233);
+color: rgb(75, 75, 75);</string>
+     </property>
+     <property name="inputMethodHints">
+      <set>Qt::ImhNone</set>
+     </property>
+     <property name="text">
+      <string>داستان فارسی</string>
+     </property>
+     <property name="frame">
+      <bool>false</bool>
+     </property>
+     <property name="echoMode">
+      <enum>QLineEdit::Normal</enum>
+     </property>
+     <property name="dragEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="placeholderText">
+      <string/>
+     </property>
+     <property name="cursorMoveStyle">
+      <enum>Qt::LogicalMoveStyle</enum>
+     </property>
+     <property name="clearButtonEnabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="input_book_code">
      <property name="geometry">
       <rect>
        <x>110</x>
@@ -1480,37 +1392,120 @@ color: rgb(75, 75, 75);</string>
       <bool>false</bool>
      </property>
     </widget>
-   </widget>
-   <widget class="QFrame" name="frame_info_2">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>20</y>
-      <width>600</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-width:1px;
-border-style:solid;
-border-radius: 25px;
-border-color: rgb(244, 244, 244);
-background-color: rgb(244, 244, 244);</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QLineEdit" name="inp_Search">
+    <widget class="QLabel" name="lbl_book_state">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>100</x>
        <y>10</y>
-       <width>560</width>
+       <width>150</width>
        <height>30</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="text">
+      <string>موجود</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_book_save">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>50</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">/*
+border-width:1px;
+border-style:solid;
+border-radius: 12px;
+border-color: rgba(244, 244, 244, 0);
+background-color: rgb(225, 225, 225);
+color: rgb(50, 50, 50);
+*/
+
+QPushButton {
+	border-width:1px;
+	border-style:solid;
+	border-radius: 12px;
+	border-color: rgba(244, 244, 244, 0);
+	background-color: rgb(225, 225, 225);
+	color: rgb(50, 50, 50);
+}
+
+QPushButton:pressed {
+	background-color: rgb(200, 200, 200, 200);
+}</string>
+     </property>
+     <property name="text">
+      <string>ذخیره</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_book_moreinfo">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>16</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">border: 0px;</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../Assets/QtResources/Resources.qrc">
+       <normaloff>:/Other/Assets/Other/Next.png</normaloff>:/Other/Assets/Other/Next.png</iconset>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbl_book_LendCount">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>90</y>
+       <width>100</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
    </widget>
@@ -1600,6 +1595,80 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
 }
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 	background: none;
+}
+
+
+
+
+
+
+/* SCROLLBAR */
+QScrollBar:horizontal {
+	border: none;
+	background-color: rgb(222, 222, 222);
+   	height: 14px;
+   	margin: 0px 15 0px 15;
+	border-radius: 0px;
+}
+
+
+/*  HANDLE BAR */
+QScrollBar::handle:horizontal {	
+	background-color: rgb(190, 190, 190);
+	min-width: 30px;
+	border-radius: 7px;
+}
+QScrollBar::handle:horizontal:hover{	
+	background-color: rgb(200, 200, 200);
+}
+QScrollBar::handle:horizontal:pressed {	
+	background-color: rgb(170, 170, 170);
+}
+
+
+/* BTN TOP - SCROLLBAR */
+QScrollBar::sub-line:horizontal {
+	border: none;
+	background-color: rgb(190, 190, 190);
+	height: 15px;
+	width:15px;
+	border-top-right-radius: 7px;
+	border-bottom-right-radius: 7px;
+	subcontrol-position: left;
+	subcontrol-origin: margin;
+}
+QScrollBar::sub-line:horizontal:hover {	
+	background-color: rgb(200, 200, 200);
+}
+QScrollBar::sub-line:horizontal:pressed {	
+	background-color: rgb(170, 170, 170);
+}
+
+/* BTN BOTTOM - SCROLLBAR */
+QScrollBar::add-line:horizontal {
+	border: none;
+	background-color: rgb(190, 190, 190);
+	height: 15px;
+	width:15px;
+	border-top-left-radius: 7px;
+	border-bottom-left-radius: 7px;
+	subcontrol-position: right;
+	subcontrol-origin: margin;
+}
+QScrollBar::add-line:horizontal:hover {	
+	background-color: rgb(200, 200, 200);
+}
+QScrollBar::add-line:horizontal:pressed {	
+	background-color: rgb(170, 170, 170);
+}
+
+
+/* RESET ARROW */
+QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+	background: none;
+}
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+	background: none;
 }</string>
     </property>
     <property name="frameShape">
@@ -1608,14 +1677,17 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QListWidget" name="listWidget">
+    <widget class="QTableWidget" name="tableWidget_search_results">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>10</y>
        <width>740</width>
-       <height>130</height>
+       <height>170</height>
       </rect>
+     </property>
+     <property name="cursor" stdset="0">
+      <cursorShape>ArrowCursor</cursorShape>
      </property>
      <property name="layoutDirection">
       <enum>Qt::RightToLeft</enum>
@@ -1627,172 +1699,170 @@ QScrollBar {
 	border-color: rgba(0, 0, 0, 0);
 }
 
-/* VERTICAL SCROLLBAR */
-QScrollBar:vertical {
+
+/* SCROLLBAR */
+QScrollBar:horizontal {
 	border: none;
 	background-color: rgb(222, 222, 222);
-   	width: 14px;
-   	margin: 15px 0 15px 0;
+   	height: 14px;
+   	margin: 0px 15 0px 15;
 	border-radius: 0px;
 }
 
-/*  HANDLE BAR VERTICAL */
-QScrollBar::handle:vertical {	
+
+/*  HANDLE BAR */
+QScrollBar::handle:horizontal {	
 	background-color: rgb(190, 190, 190);
-	min-height: 30px;
+	min-width: 30px;
 	border-radius: 7px;
 }
-QScrollBar::handle:vertical:hover{	
+QScrollBar::handle:horizontal:hover{	
 	background-color: rgb(200, 200, 200);
 }
-QScrollBar::handle:vertical:pressed {	
+QScrollBar::handle:horizontal:pressed {	
 	background-color: rgb(170, 170, 170);
 }
 
 
 /* BTN TOP - SCROLLBAR */
-QScrollBar::sub-line:vertical {
+QScrollBar::sub-line:horizontal {
 	border: none;
 	background-color: rgb(190, 190, 190);
 	height: 15px;
-	border-top-left-radius: 7px;
+	width:15px;
 	border-top-right-radius: 7px;
-	subcontrol-position: top;
+	border-bottom-right-radius: 7px;
+	subcontrol-position: left;
 	subcontrol-origin: margin;
 }
-QScrollBar::sub-line:vertical:hover {	
+QScrollBar::sub-line:horizontal:hover {	
 	background-color: rgb(200, 200, 200);
 }
-QScrollBar::sub-line:vertical:pressed {	
+QScrollBar::sub-line:horizontal:pressed {	
 	background-color: rgb(170, 170, 170);
 }
 
 /* BTN BOTTOM - SCROLLBAR */
-QScrollBar::add-line:vertical {
+QScrollBar::add-line:horizontal {
 	border: none;
 	background-color: rgb(190, 190, 190);
 	height: 15px;
+	width:15px;
+	border-top-left-radius: 7px;
 	border-bottom-left-radius: 7px;
-	border-bottom-right-radius: 7px;
-	subcontrol-position: bottom;
+	subcontrol-position: right;
 	subcontrol-origin: margin;
 }
-QScrollBar::add-line:vertical:hover {	
+QScrollBar::add-line:horizontal:hover {	
 	background-color: rgb(200, 200, 200);
 }
-QScrollBar::add-line:vertical:pressed {	
+QScrollBar::add-line:horizontal:pressed {	
 	background-color: rgb(170, 170, 170);
 }
 
+
 /* RESET ARROW */
-QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
+QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
 	background: none;
 }
-QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
 	background: none;
 }</string>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::StyledPanel</enum>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
      </property>
-     <item>
+     <property name="tabKeyNavigation">
+      <bool>false</bool>
+     </property>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
+     </property>
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="showGrid">
+      <bool>true</bool>
+     </property>
+     <property name="gridStyle">
+      <enum>Qt::SolidLine</enum>
+     </property>
+     <property name="sortingEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="cornerButtonEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="rowCount">
+      <number>10</number>
+     </property>
+     <property name="columnCount">
+      <number>4</number>
+     </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>175</number>
+     </attribute>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <column>
       <property name="text">
-       <string>1</string>
+       <string>عنوان</string>
       </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>2</string>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
       </property>
-     </item>
-     <item>
+     </column>
+     <column>
       <property name="text">
-       <string>3</string>
+       <string>نویسنده</string>
       </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>4</string>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
       </property>
-     </item>
-     <item>
+     </column>
+     <column>
       <property name="text">
-       <string>5</string>
+       <string>موضوع</string>
       </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>6</string>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
       </property>
-     </item>
-     <item>
+     </column>
+     <column>
       <property name="text">
-       <string>7</string>
+       <string>کد کتاب</string>
       </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>8</string>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
       </property>
-     </item>
-     <item>
+     </column>
+     <item row="0" column="0">
       <property name="text">
-       <string>9</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>10</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>11</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>12</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>13</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>14</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>15</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>16</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>17</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>18</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>19</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>20</string>
+       <string/>
       </property>
      </item>
     </widget>
@@ -1800,7 +1870,7 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
    <widget class="QPushButton" name="btn_Search">
     <property name="geometry">
      <rect>
-      <x>660</x>
+      <x>700</x>
       <y>20</y>
       <width>50</width>
       <height>50</height>
@@ -2078,6 +2148,121 @@ QPushButton:disabled {
     <property name="flat">
      <bool>true</bool>
     </property>
+   </widget>
+   <widget class="QFrame" name="frame_search">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>20</y>
+      <width>650</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-width:1px;
+border-style:solid;
+border-radius: 25px;
+border-color: rgb(244, 244, 244);
+background-color: rgb(244, 244, 244);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLineEdit" name="inp_Search">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>500</width>
+       <height>30</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="input_open_search_category">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>10</y>
+       <width>110</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox {
+	color: rgb(50, 50, 50);
+	color: rgb(150, 150, 150);
+	border-radius: 15px;
+	border-color: rgba(0, 0, 0, 0);
+	background-color: rgb(222, 222, 222);
+}
+
+QComboBox::drop-down {
+	subcontrol-origin: padding;
+	subcontrol-position: top right;
+	width: 15px;
+	
+	border-left-width: 1px;
+	border-left-color: darkgray;
+	border-left-style: solid; /* just a single line */
+	border-top-right-radius: 25px; /* same radius as the QComboBox */
+	border-bottom-right-radius: 25px;
+}</string>
+     </property>
+     <property name="currentText">
+      <string>بر اساس</string>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="modelColumn">
+      <number>0</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>بر اساس</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>عنوان</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>نویسنده</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>موضوع</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>کد کتاب</string>
+      </property>
+     </item>
+    </widget>
    </widget>
   </widget>
  </widget>

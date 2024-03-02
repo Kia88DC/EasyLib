@@ -423,7 +423,7 @@ border-color: rgb(255, 255, 255);
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QFrame" name="frame_acc_3">
+    <widget class="QFrame" name="frame_comp_3">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -448,7 +448,7 @@ background-color: rgb(255, 251, 230);</string>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QLabel" name="lbl_UserCount_4">
+     <widget class="QLabel" name="lbl_delUser_name">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -478,7 +478,7 @@ background-color: rgb(255, 240, 200);</string>
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbl_UserCount_5">
+     <widget class="QLabel" name="lbl_delUser_id">
       <property name="geometry">
        <rect>
         <x>70</x>
@@ -508,7 +508,7 @@ background-color: rgb(255, 240, 200);</string>
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbl_UserCount_6">
+     <widget class="QLabel" name="lbl_delUser_number">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -538,7 +538,7 @@ background-color: rgb(255, 240, 200);</string>
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_text_save_3">
+     <widget class="QPushButton" name="btn_delUser_submit">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -582,7 +582,7 @@ QPushButton:pressed {
        <string>حذف</string>
       </property>
      </widget>
-     <widget class="QLabel" name="lbl_acc_3_title">
+     <widget class="QLabel" name="lbl_comp_3_title">
       <property name="geometry">
        <rect>
         <x>40</x>
@@ -609,7 +609,7 @@ color: rgb(50, 50, 50);</string>
       </property>
      </widget>
     </widget>
-    <widget class="QFrame" name="frame_acc_1">
+    <widget class="QFrame" name="frame_comp_1">
      <property name="geometry">
       <rect>
        <x>390</x>
@@ -634,7 +634,7 @@ background-color: rgb(230, 245, 255);</string>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QLabel" name="lbl_acc_1_title">
+     <widget class="QLabel" name="lbl_comp_1_title">
       <property name="geometry">
        <rect>
         <x>250</x>
@@ -660,7 +660,7 @@ color: rgb(50, 50, 50);</string>
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLineEdit" name="input_add_title">
+     <widget class="QLineEdit" name="input_addUser_name">
       <property name="geometry">
        <rect>
         <x>180</x>
@@ -712,7 +712,7 @@ background-color: rgb(207, 234, 255);</string>
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QLineEdit" name="input_add_title_2">
+     <widget class="QLineEdit" name="input_addUser_number">
       <property name="geometry">
        <rect>
         <x>180</x>
@@ -764,11 +764,11 @@ background-color: rgb(207, 234, 255);</string>
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_text_save_2">
+     <widget class="QPushButton" name="btn_addUser_submit">
       <property name="geometry">
        <rect>
-        <x>30</x>
-        <y>20</y>
+        <x>20</x>
+        <y>10</y>
         <width>50</width>
         <height>30</height>
        </rect>
@@ -806,7 +806,7 @@ QPushButton:pressed {
        <string>افزودن</string>
       </property>
      </widget>
-     <widget class="QCheckBox" name="checkBox">
+     <widget class="QCheckBox" name="ChBox_addUser_automatic_id">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -828,7 +828,7 @@ QPushButton:pressed {
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QLineEdit" name="input_add_title_4">
+     <widget class="QLineEdit" name="input_addUser_id">
       <property name="geometry">
        <rect>
         <x>80</x>
@@ -879,7 +879,7 @@ background-color: rgb(207, 234, 255);</string>
        <bool>false</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="pushButton_6">
+     <widget class="QPushButton" name="btn_addUser_image">
       <property name="enabled">
        <bool>false</bool>
       </property>
@@ -931,7 +931,7 @@ QPushButton:disabled {
       </property>
      </widget>
     </widget>
-    <widget class="QFrame" name="frame_acc_8">
+    <widget class="QFrame" name="frame_comp_2">
      <property name="geometry">
       <rect>
        <x>200</x>
@@ -956,7 +956,7 @@ background-color: rgb(234, 249, 241);</string>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QLabel" name="lbl_acc_3_title_2">
+     <widget class="QLabel" name="lbl_comp_2_title">
       <property name="geometry">
        <rect>
         <x>40</x>
@@ -982,7 +982,7 @@ color: rgb(50, 50, 50);</string>
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QComboBox" name="input_open_title">
+     <widget class="QComboBox" name="ComboBox_renewSub_amount">
       <property name="geometry">
        <rect>
         <x>70</x>
@@ -1095,7 +1095,7 @@ QComboBox::down-arrow:on {
        </property>
       </item>
      </widget>
-     <widget class="QPushButton" name="btn_text_save_4">
+     <widget class="QPushButton" name="btn_renewSub_submit">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1138,7 +1138,7 @@ QPushButton:pressed {
        <string>تمدید</string>
       </property>
      </widget>
-     <widget class="QLabel" name="lbl_acc_3_title_3">
+     <widget class="QLabel" name="lbl_comp_2_id">
       <property name="geometry">
        <rect>
         <x>120</x>
@@ -1164,7 +1164,7 @@ color: rgb(75, 75, 75);</string>
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbl_UserCount_7">
+     <widget class="QLabel" name="lbl_renewSub_user_name">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1194,7 +1194,7 @@ background-color: rgb(207, 242, 224);</string>
        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbl_UserCount_9">
+     <widget class="QLabel" name="lbl_renewSub_user_id">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -1298,7 +1298,7 @@ background-color: rgb(244, 244, 244);</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QPushButton" name="btn_view_moreinfo">
+    <widget class="QPushButton" name="btn_user_moreinfo">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -1414,7 +1414,7 @@ background-color: rgb(244, 244, 244);</string>
       <string>تعداد بار امانت گرفتن:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="lbl_user_image">
      <property name="geometry">
       <rect>
        <x>660</x>
@@ -1456,7 +1456,7 @@ background-color: rgb(244, 244, 244);</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_UserCount_2">
+    <widget class="QLabel" name="lbl_user_borrow_count">
      <property name="geometry">
       <rect>
        <x>60</x>
@@ -1480,7 +1480,7 @@ background-color: rgb(244, 244, 244);</string>
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_UserCount_3">
+    <widget class="QLabel" name="lbl_user_subscribtion_state">
      <property name="geometry">
       <rect>
        <x>90</x>
@@ -1504,7 +1504,7 @@ background-color: rgb(244, 244, 244);</string>
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_text_save">
+    <widget class="QPushButton" name="btn_user_save">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -1546,7 +1546,7 @@ QPushButton:pressed {
       <string>ذخیره</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="input_username">
+    <widget class="QLineEdit" name="input_user_name">
      <property name="geometry">
       <rect>
        <x>330</x>
@@ -1598,7 +1598,7 @@ color: rgb(75, 75, 75);</string>
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QLineEdit" name="input_username_2">
+    <widget class="QLineEdit" name="input_user_id">
      <property name="geometry">
       <rect>
        <x>330</x>
@@ -1653,7 +1653,7 @@ color: rgb(75, 75, 75);</string>
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QLineEdit" name="input_username_4">
+    <widget class="QLineEdit" name="input_user_number">
      <property name="geometry">
       <rect>
        <x>330</x>
@@ -1726,7 +1726,7 @@ color: rgb(75, 75, 75);</string>
       <string>وضعیت امانت:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_UserCount_8">
+    <widget class="QLabel" name="lbl_user_borrow_state">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -1751,43 +1751,7 @@ color: rgb(75, 75, 75);</string>
      </property>
     </widget>
    </widget>
-   <widget class="QFrame" name="frame_info_2">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>20</y>
-      <width>600</width>
-      <height>50</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">border-width:1px;
-border-style:solid;
-border-radius: 25px;
-border-color: rgb(244, 244, 244);
-background-color: rgb(244, 244, 244);</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::NoFrame</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QLineEdit" name="inp_Search">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>10</y>
-       <width>560</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QFrame" name="frame_todo">
+   <widget class="QFrame" name="frame_searchR">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -1797,32 +1761,14 @@ background-color: rgb(244, 244, 244);</string>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">border-width:1px;
+     <string notr="true">QFrame {
+border-width:1px;
 border-style:solid;
 border-radius: 20px;
 border-color: rgb(244, 244, 244);
-background-color: rgb(244, 244, 244);   </string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QScrollArea" name="scroll_todo">
-     <property name="geometry">
-      <rect>
-       <x>5</x>
-       <y>45</y>
-       <width>750</width>
-       <height>120</height>
-      </rect>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::WheelFocus</enum>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">/* SCROLLBAR */
+background-color: rgb(244, 244, 244);   
+}
+/* SCROLLBAR */
 QScrollBar {
 	border: 0px;
 	border-color: rgba(0, 0, 0, 0);
@@ -1891,271 +1837,270 @@ QScrollBar::up-arrow:vertical, QScrollBar::down-arrow:vertical {
 }
 QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
 	background: none;
+}
+
+
+
+
+
+
+/* SCROLLBAR */
+QScrollBar:horizontal {
+	border: none;
+	background-color: rgb(222, 222, 222);
+   	height: 14px;
+   	margin: 0px 15 0px 15;
+	border-radius: 0px;
+}
+
+
+/*  HANDLE BAR */
+QScrollBar::handle:horizontal {	
+	background-color: rgb(190, 190, 190);
+	min-width: 30px;
+	border-radius: 7px;
+}
+QScrollBar::handle:horizontal:hover{	
+	background-color: rgb(200, 200, 200);
+}
+QScrollBar::handle:horizontal:pressed {	
+	background-color: rgb(170, 170, 170);
+}
+
+
+/* BTN TOP - SCROLLBAR */
+QScrollBar::sub-line:horizontal {
+	border: none;
+	background-color: rgb(190, 190, 190);
+	height: 15px;
+	width:15px;
+	border-top-right-radius: 7px;
+	border-bottom-right-radius: 7px;
+	subcontrol-position: left;
+	subcontrol-origin: margin;
+}
+QScrollBar::sub-line:horizontal:hover {	
+	background-color: rgb(200, 200, 200);
+}
+QScrollBar::sub-line:horizontal:pressed {	
+	background-color: rgb(170, 170, 170);
+}
+
+/* BTN BOTTOM - SCROLLBAR */
+QScrollBar::add-line:horizontal {
+	border: none;
+	background-color: rgb(190, 190, 190);
+	height: 15px;
+	width:15px;
+	border-top-left-radius: 7px;
+	border-bottom-left-radius: 7px;
+	subcontrol-position: right;
+	subcontrol-origin: margin;
+}
+QScrollBar::add-line:horizontal:hover {	
+	background-color: rgb(200, 200, 200);
+}
+QScrollBar::add-line:horizontal:pressed {	
+	background-color: rgb(170, 170, 170);
+}
+
+
+/* RESET ARROW */
+QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+	background: none;
+}
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+	background: none;
+}</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QTableWidget" name="tableWidget_search_results">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>740</width>
+       <height>150</height>
+      </rect>
+     </property>
+     <property name="cursor" stdset="0">
+      <cursorShape>ArrowCursor</cursorShape>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">/* SCROLLBAR */
+QScrollBar {
+	border: 0px;
+	border-color: rgba(0, 0, 0, 0);
+}
+
+
+/* SCROLLBAR */
+QScrollBar:horizontal {
+	border: none;
+	background-color: rgb(222, 222, 222);
+   	height: 14px;
+   	margin: 0px 15 0px 15;
+	border-radius: 0px;
+}
+
+
+/*  HANDLE BAR */
+QScrollBar::handle:horizontal {	
+	background-color: rgb(190, 190, 190);
+	min-width: 30px;
+	border-radius: 7px;
+}
+QScrollBar::handle:horizontal:hover{	
+	background-color: rgb(200, 200, 200);
+}
+QScrollBar::handle:horizontal:pressed {	
+	background-color: rgb(170, 170, 170);
+}
+
+
+/* BTN TOP - SCROLLBAR */
+QScrollBar::sub-line:horizontal {
+	border: none;
+	background-color: rgb(190, 190, 190);
+	height: 15px;
+	width:15px;
+	border-top-right-radius: 7px;
+	border-bottom-right-radius: 7px;
+	subcontrol-position: left;
+	subcontrol-origin: margin;
+}
+QScrollBar::sub-line:horizontal:hover {	
+	background-color: rgb(200, 200, 200);
+}
+QScrollBar::sub-line:horizontal:pressed {	
+	background-color: rgb(170, 170, 170);
+}
+
+/* BTN BOTTOM - SCROLLBAR */
+QScrollBar::add-line:horizontal {
+	border: none;
+	background-color: rgb(190, 190, 190);
+	height: 15px;
+	width:15px;
+	border-top-left-radius: 7px;
+	border-bottom-left-radius: 7px;
+	subcontrol-position: right;
+	subcontrol-origin: margin;
+}
+QScrollBar::add-line:horizontal:hover {	
+	background-color: rgb(200, 200, 200);
+}
+QScrollBar::add-line:horizontal:pressed {	
+	background-color: rgb(170, 170, 170);
+}
+
+
+/* RESET ARROW */
+QScrollBar::left-arrow:horizontal, QScrollBar::right-arrow:horizontal {
+	background: none;
+}
+QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
+	background: none;
 }</string>
      </property>
-     <property name="frameShape">
-      <enum>QFrame::NoFrame</enum>
+     <property name="editTriggers">
+      <set>QAbstractItemView::NoEditTriggers</set>
      </property>
-     <property name="frameShadow">
-      <enum>QFrame::Plain</enum>
+     <property name="tabKeyNavigation">
+      <bool>false</bool>
      </property>
-     <property name="verticalScrollBarPolicy">
-      <enum>Qt::ScrollBarAlwaysOn</enum>
+     <property name="selectionMode">
+      <enum>QAbstractItemView::SingleSelection</enum>
      </property>
-     <property name="widgetResizable">
+     <property name="selectionBehavior">
+      <enum>QAbstractItemView::SelectRows</enum>
+     </property>
+     <property name="showGrid">
       <bool>true</bool>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
+     <property name="gridStyle">
+      <enum>Qt::SolidLine</enum>
      </property>
-     <widget class="QWidget" name="scroll_todo_container">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>734</width>
-        <height>190</height>
-       </rect>
+     <property name="sortingEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="cornerButtonEnabled">
+      <bool>false</bool>
+     </property>
+     <property name="rowCount">
+      <number>10</number>
+     </property>
+     <property name="columnCount">
+      <number>3</number>
+     </property>
+     <attribute name="horizontalHeaderDefaultSectionSize">
+      <number>233</number>
+     </attribute>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <row/>
+     <column>
+      <property name="text">
+       <string>نام</string>
       </property>
-      <layout class="QVBoxLayout" name="TodoVerticalLayout">
-       <item>
-        <widget class="QPushButton" name="pushButton">
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="layoutDirection">
-          <enum>Qt::LeftToRight</enum>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">@QPushButton { 
-background-color: rgba(0, 0, 0, 0);
-border-width: 1px;
-border-radius: 10px;
-font: bold 20px;
-min-width: 8em;
-padding: 5px;
-color: rgb(50, 50, 50);
-}
-
-QPushButton:pressed
-{
-background-color: rgba(25, 25, 25, 80);
-border-style:solid;
-border-radius: 10px;
-border-right-color: rgb(234, 234, 234);
-border-bottom-color: rgb(234, 234, 234);
-border-width:2px;
-color: rgb(50, 50, 50);
-}</string>
-         </property>
-         <property name="text">
-          <string>عضو ۱</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_3">
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="layoutDirection">
-          <enum>Qt::LeftToRight</enum>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">@QPushButton { 
-background-color: rgba(0, 0, 0, 0);
-border-width: 1px;
-border-radius: 10px;
-font: bold 20px;
-min-width: 8em;
-padding: 5px;
-color: rgb(50, 50, 50);
-}
-
-QPushButton:pressed
-{
-background-color: rgba(25, 25, 25, 80);
-border-style:solid;
-border-radius: 10px;
-border-right-color: rgb(234, 234, 234);
-border-bottom-color: rgb(234, 234, 234);
-border-width:2px;
-color: rgb(50, 50, 50);
-}</string>
-         </property>
-         <property name="text">
-          <string>عضو ۲</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_4">
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="layoutDirection">
-          <enum>Qt::LeftToRight</enum>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">@QPushButton { 
-background-color: rgba(0, 0, 0, 0);
-border-width: 1px;
-border-radius: 10px;
-font: bold 20px;
-min-width: 8em;
-padding: 5px;
-color: rgb(50, 50, 50);
-}
-
-QPushButton:pressed
-{
-background-color: rgba(25, 25, 25, 80);
-border-style:solid;
-border-radius: 10px;
-border-right-color: rgb(234, 234, 234);
-border-bottom-color: rgb(234, 234, 234);
-border-width:2px;
-color: rgb(50, 50, 50);
-}</string>
-         </property>
-         <property name="text">
-          <string>عضو ۳</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_5">
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="layoutDirection">
-          <enum>Qt::LeftToRight</enum>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">@QPushButton { 
-background-color: rgba(0, 0, 0, 0);
-border-width: 1px;
-border-radius: 10px;
-font: bold 20px;
-min-width: 8em;
-padding: 5px;
-color: rgb(50, 50, 50);
-}
-
-QPushButton:pressed
-{
-background-color: rgba(25, 25, 25, 80);
-border-style:solid;
-border-radius: 10px;
-border-right-color: rgb(234, 234, 234);
-border-bottom-color: rgb(234, 234, 234);
-border-width:2px;
-color: rgb(50, 50, 50);
-}</string>
-         </property>
-         <property name="text">
-          <string>عضو ۴</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_2">
-         <property name="font">
-          <font>
-           <pointsize>16</pointsize>
-          </font>
-         </property>
-         <property name="cursor">
-          <cursorShape>PointingHandCursor</cursorShape>
-         </property>
-         <property name="layoutDirection">
-          <enum>Qt::LeftToRight</enum>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">@QPushButton { 
-background-color: rgba(0, 0, 0, 0);
-border-width: 1px;
-border-radius: 10px;
-font: bold 20px;
-min-width: 8em;
-padding: 5px;
-color: rgb(50, 50, 50);
-}
-
-QPushButton:pressed
-{
-background-color: rgba(25, 25, 25, 80);
-border-style:solid;
-border-radius: 10px;
-border-right-color: rgb(234, 234, 234);
-border-bottom-color: rgb(234, 234, 234);
-border-width:2px;
-color: rgb(50, 50, 50);
-}</string>
-         </property>
-         <property name="text">
-          <string>عضو ۵</string>
-         </property>
-         <property name="checkable">
-          <bool>true</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>شناسه</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>شماره تلفن</string>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+     </column>
+     <item row="0" column="0">
+      <property name="text">
+       <string/>
+      </property>
+     </item>
     </widget>
    </widget>
    <widget class="QPushButton" name="btn_Search">
     <property name="geometry">
      <rect>
-      <x>660</x>
+      <x>700</x>
       <y>20</y>
       <width>50</width>
       <height>50</height>
@@ -2433,6 +2378,116 @@ QPushButton:disabled {
     <property name="flat">
      <bool>true</bool>
     </property>
+   </widget>
+   <widget class="QFrame" name="frame_search">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>20</y>
+      <width>650</width>
+      <height>50</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-width:1px;
+border-style:solid;
+border-radius: 25px;
+border-color: rgb(244, 244, 244);
+background-color: rgb(244, 244, 244);</string>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::NoFrame</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QLineEdit" name="inp_Search">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>500</width>
+       <height>30</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QComboBox" name="input_open_search_category">
+     <property name="geometry">
+      <rect>
+       <x>530</x>
+       <y>10</y>
+       <width>110</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QComboBox {
+	color: rgb(50, 50, 50);
+	color: rgb(150, 150, 150);
+	border-radius: 15px;
+	border-color: rgba(0, 0, 0, 0);
+	background-color: rgb(222, 222, 222);
+}
+
+QComboBox::drop-down {
+	subcontrol-origin: padding;
+	subcontrol-position: top right;
+	width: 15px;
+	
+	border-left-width: 1px;
+	border-left-color: darkgray;
+	border-left-style: solid; /* just a single line */
+	border-top-right-radius: 25px; /* same radius as the QComboBox */
+	border-bottom-right-radius: 25px;
+}</string>
+     </property>
+     <property name="currentText">
+      <string>بر اساس</string>
+     </property>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="modelColumn">
+      <number>0</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>بر اساس</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>نام</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>شناسه</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>شماره تلفن</string>
+      </property>
+     </item>
+    </widget>
    </widget>
   </widget>
  </widget>

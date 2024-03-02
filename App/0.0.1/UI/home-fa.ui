@@ -792,7 +792,7 @@ color: rgb(50, 50, 50);</string>
       </property>
      </widget>
     </widget>
-    <widget class="QFrame" name="frame_acc_66">
+    <widget class="QFrame" name="frame_acc_6">
      <property name="geometry">
       <rect>
        <x>160</x>
@@ -877,7 +877,7 @@ color: rgb(50, 50, 50);</string>
       </property>
      </widget>
     </widget>
-    <widget class="QFrame" name="frame_acc_55">
+    <widget class="QFrame" name="frame_acc_5">
      <property name="geometry">
       <rect>
        <x>160</x>
@@ -2195,7 +2195,7 @@ background-color: rgb(244, 244, 244);</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QPushButton" name="btn_view_moreinfo">
+    <widget class="QPushButton" name="btn_info_moreinfo">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -2217,8 +2217,8 @@ background-color: rgb(244, 244, 244);</string>
       <string/>
      </property>
      <property name="icon">
-      <iconset>
-       <normaloff>:/Next/Assets/Other/Next.png</normaloff>:/Next/Assets/Other/Next.png</iconset>
+      <iconset resource="../Assets/QtResources/Resources.qrc">
+       <normaloff>:/Other/Assets/Other/Next.png</normaloff>:/Other/Assets/Other/Next.png</iconset>
      </property>
     </widget>
     <widget class="QLabel" name="label_2">
@@ -2239,7 +2239,7 @@ background-color: rgb(244, 244, 244);</string>
       <string>نام کتابخانه:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_LibName">
+    <widget class="QLabel" name="lbl_info_LibName">
      <property name="geometry">
       <rect>
        <x>100</x>
@@ -2275,7 +2275,7 @@ background-color: rgb(244, 244, 244);</string>
       <string>کتابدار:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_Librarian">
+    <widget class="QLabel" name="lbl_info_Librarian">
      <property name="geometry">
       <rect>
        <x>130</x>
@@ -2311,7 +2311,7 @@ background-color: rgb(244, 244, 244);</string>
       <string>تعداد اعضا:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_UserCount">
+    <widget class="QLabel" name="lbl_info_UserCount">
      <property name="geometry">
       <rect>
        <x>350</x>
@@ -2353,7 +2353,7 @@ background-color: rgb(244, 244, 244);</string>
       <string>تعداد کتاب ها:</string>
      </property>
     </widget>
-    <widget class="QLabel" name="label_9">
+    <widget class="QLabel" name="lbl_info_BookCount">
      <property name="geometry">
       <rect>
        <x>50</x>
