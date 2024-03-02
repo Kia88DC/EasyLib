@@ -245,9 +245,9 @@
        <colorrole role="WindowText">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
-          <red>100</red>
-          <green>100</green>
-          <blue>100</blue>
+          <red>175</red>
+          <green>175</green>
+          <blue>175</blue>
          </color>
         </brush>
        </colorrole>
@@ -263,18 +263,18 @@
        <colorrole role="Text">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
-          <red>100</red>
-          <green>100</green>
-          <blue>100</blue>
+          <red>175</red>
+          <green>175</green>
+          <blue>175</blue>
          </color>
         </brush>
        </colorrole>
        <colorrole role="ButtonText">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
-          <red>100</red>
-          <green>100</green>
-          <blue>100</blue>
+          <red>175</red>
+          <green>175</green>
+          <blue>175</blue>
          </color>
         </brush>
        </colorrole>
@@ -283,9 +283,9 @@
        <colorrole role="WindowText">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
-          <red>100</red>
-          <green>100</green>
-          <blue>100</blue>
+          <red>175</red>
+          <green>175</green>
+          <blue>175</blue>
          </color>
         </brush>
        </colorrole>
@@ -301,18 +301,18 @@
        <colorrole role="Text">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
-          <red>100</red>
-          <green>100</green>
-          <blue>100</blue>
+          <red>175</red>
+          <green>175</green>
+          <blue>175</blue>
          </color>
         </brush>
        </colorrole>
        <colorrole role="ButtonText">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
-          <red>100</red>
-          <green>100</green>
-          <blue>100</blue>
+          <red>175</red>
+          <green>175</green>
+          <blue>175</blue>
          </color>
         </brush>
        </colorrole>
@@ -321,9 +321,9 @@
        <colorrole role="WindowText">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
-          <red>100</red>
-          <green>100</green>
-          <blue>100</blue>
+          <red>175</red>
+          <green>175</green>
+          <blue>175</blue>
          </color>
         </brush>
        </colorrole>
@@ -339,18 +339,18 @@
        <colorrole role="Text">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
-          <red>100</red>
-          <green>100</green>
-          <blue>100</blue>
+          <red>175</red>
+          <green>175</green>
+          <blue>175</blue>
          </color>
         </brush>
        </colorrole>
        <colorrole role="ButtonText">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
-          <red>174</red>
-          <green>174</green>
-          <blue>174</blue>
+          <red>175</red>
+          <green>175</green>
+          <blue>175</blue>
          </color>
         </brush>
        </colorrole>
@@ -367,7 +367,7 @@
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(100, 100, 100);</string>
+     <string notr="true">color: rgb(175, 175, 175);</string>
     </property>
     <property name="text">
      <string>گزارشات</string>
@@ -427,7 +427,7 @@ border-color: rgb(255, 255, 255);
       </rect>
      </property>
      <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
+      <cursorShape>ArrowCursor</cursorShape>
      </property>
      <property name="styleSheet">
       <string notr="true">border-width:1px;
@@ -643,7 +643,7 @@ QPushButton:pressed {
       </rect>
      </property>
      <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
+      <cursorShape>ArrowCursor</cursorShape>
      </property>
      <property name="styleSheet">
       <string notr="true">border-width:1px;
@@ -889,6 +889,9 @@ QPushButton:pressed {
         <width>60</width>
         <height>30</height>
        </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="layoutDirection">
        <enum>Qt::LeftToRight</enum>
@@ -2212,6 +2215,9 @@ background-color: rgb(225, 225, 225, 200);
     </property>
    </widget>
    <widget class="QPushButton" name="btn_book_photo">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>680</x>
@@ -2223,12 +2229,39 @@ background-color: rgb(225, 225, 225, 200);
     <property name="palette">
      <palette>
       <active>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
        <colorrole role="Button">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
           <red>255</red>
           <green>255</green>
           <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Text">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="ButtonText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
          </color>
         </brush>
        </colorrole>
@@ -2252,12 +2285,39 @@ background-color: rgb(225, 225, 225, 200);
        </colorrole>
       </active>
       <inactive>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
        <colorrole role="Button">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
           <red>255</red>
           <green>255</green>
           <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Text">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="ButtonText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>0</red>
+          <green>0</green>
+          <blue>0</blue>
          </color>
         </brush>
        </colorrole>
@@ -2281,12 +2341,39 @@ background-color: rgb(225, 225, 225, 200);
        </colorrole>
       </inactive>
       <disabled>
+       <colorrole role="WindowText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>150</red>
+          <green>150</green>
+          <blue>150</blue>
+         </color>
+        </brush>
+       </colorrole>
        <colorrole role="Button">
         <brush brushstyle="SolidPattern">
          <color alpha="255">
           <red>255</red>
           <green>255</green>
           <blue>255</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="Text">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>150</red>
+          <green>150</green>
+          <blue>150</blue>
+         </color>
+        </brush>
+       </colorrole>
+       <colorrole role="ButtonText">
+        <brush brushstyle="SolidPattern">
+         <color alpha="255">
+          <red>150</red>
+          <green>150</green>
+          <blue>150</blue>
          </color>
         </brush>
        </colorrole>
@@ -2335,6 +2422,11 @@ border-radius: 10px;
 border-right-color: rgb(234, 234, 234);
 border-bottom-color: rgb(234, 234, 234);
 border-width:2px;
+}
+
+QPushButton:disabled {
+	color: rgb(150, 150, 150);
+	cursor: Arrow;
 }</string>
     </property>
     <property name="text">
