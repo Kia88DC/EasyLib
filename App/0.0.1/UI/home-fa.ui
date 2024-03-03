@@ -14,7 +14,12 @@
    <string>EasyLib</string>
   </property>
   <property name="styleSheet">
-   <string notr="true"/>
+   <string notr="true">QDialog {
+	background-color: rgb(235, 235, 235);
+}
+QMainWindow {
+	background-color: rgb(235, 235, 235);
+}</string>
   </property>
   <property name="locale">
    <locale language="Persian" country="Iran"/>
@@ -278,7 +283,7 @@
 border-style:solid;
 border-radius: 10px;
 border-color: rgb(255, 255, 255);
-</string>
+color: rgb(50, 50, 50);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -2187,7 +2192,8 @@ border-width:2px;
 border-style:solid;
 border-radius: 10px;
 border-color: rgb(244, 244, 244);
-background-color: rgb(244, 244, 244);</string>
+background-color: rgb(244, 244, 244);
+color: rgb(50, 50, 50);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::NoFrame</enum>
