@@ -432,7 +432,7 @@ background-color: rgb(244, 244, 244);
 
 QPushButton:pressed
 {
-background-color: rgb(225, 225, 225, 200);
+background-color: rgba(225, 225, 225, 200);
 }
 */</string>
    </property>
@@ -1086,7 +1086,7 @@ QPushButton {
 }
 
 QPushButton:pressed {
-	background-color: rgb(200, 200, 200, 200);
+	background-color: rgba(200, 200, 200, 200);
 }</string>
     </property>
     <property name="text">
@@ -1870,7 +1870,7 @@ QPushButton:pressed {
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-color: rgba(0, 0, 0,0);
+      <string notr="true">border-color: rgba(0, 0, 0, 0);
 background-color: rgba(0, 0, 0, 0);
 color: rgb(50, 50, 50);</string>
      </property>
@@ -1922,7 +1922,7 @@ background-color: rgb(230, 245, 255);</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-color: rgba(0, 0, 0,0);
+      <string notr="true">border-color: rgba(0, 0, 0, 0);
 background-color: rgba(0, 0, 0, 0);
 color: rgb(50, 50, 50);</string>
      </property>
@@ -2244,7 +2244,7 @@ background-color: rgb(234, 249, 241);</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border-color: rgba(0, 0, 0,0);
+      <string notr="true">border-color: rgba(0, 0, 0, 0);
 background-color: rgba(0, 0, 0, 0);
 color: rgb(50, 50, 50);</string>
      </property>

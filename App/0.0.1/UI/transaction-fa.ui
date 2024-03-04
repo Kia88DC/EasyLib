@@ -1960,7 +1960,7 @@ QPushButton {
 }
 
 QPushButton:pressed {
-	background-color: rgb(200, 200, 200, 200);
+	background-color: rgba(200, 200, 200, 200);
 }</string>
     </property>
     <property name="text">
