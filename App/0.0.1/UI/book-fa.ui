@@ -1265,7 +1265,7 @@ color: rgb(50, 50, 50);</string>
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QLineEdit" name="inp_Search">
+   <widget class="QLineEdit" name="inp_search_box">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -1275,7 +1275,7 @@ color: rgb(50, 50, 50);</string>
      </rect>
     </property>
    </widget>
-   <widget class="QComboBox" name="input_open_search_category">
+   <widget class="QComboBox" name="inp_search_category">
     <property name="geometry">
      <rect>
       <x>530</x>

@@ -287,3 +287,51 @@
 
 # print(cached_sql_show("Books", True))
 # print(cached_sql_show("Books", False, column="ID"))
+
+
+
+def Caching_Key_Generator(mainArgs, args, kwargs, prefix:str="", sep:str="|"):
+    #     key = prefix
+    # for arg in args:
+    #     key += str(arg) + sep
+    # key.strip(sep)
+    # return key
+    key = prefix
+    if mainArgs:
+        for mainArg in mainArgs:
+            key += str(mainArg) + sep
+        key = key.strip(sep)
+    if args:
+        key += sep + "*:"
+        for arg in args:
+            key += str(arg) + sep
+        key = key.strip(sep)
+    if kwargs:
+        key += sep + "**:"
+        for kwarg in kwargs.keys():
+            key += str(kwargs[kwarg]) + sep
+        key = key.strip(sep)
+
+    return key
+
+from dogpile.util import compat
+
+def cache_on_kwargs(func, namespace="", sep="|", key_generator=Caching_Key_Generator):
+    nargs = func.__code__.co_argcount
+    names = func.__code__.co_varnames
+
+    def wrapper(*args, **kwargs):
+        # key = key_generator(args, kwargs, namespace, sep)
+        _ = 0
+        if names[0] in ("self", "cls"): _ = 1
+        key = key_generator(args[_:nargs], args[nargs:], kwargs, namespace, sep)
+        print(key)
+
+    return wrapper
+
+@cache_on_kwargs
+def f(a, b, c=True, *_args, **_kwargs):
+    pass
+
+f(1, 2, 3, 4, 5, f=6, g=7)
+f(1, 2, 3, 4, 5)

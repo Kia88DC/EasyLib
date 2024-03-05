@@ -70,11 +70,10 @@ class Sql():
         -if False : \n
         --kwargs : \n
         ---column = the column(s) to show -> <column_name> OR "all" \n
-        ---condition_count  int = the count of conditions \n
-        ---condition_columns [] = the name of column the condition is on it \n
-        ---condition_values  [] = the value for condition \n
-        ---condition_v_types [] = the type of value for condition e.g: [int, float, str] \n
-        ---condition_oprs    [] = the comparison-oprators for condition e.g: ["=",">"] \n
+        ---condition_columns  [] = the name of column the condition is on it \n
+        ---condition_values   [] = the value for condition \n
+        ---condition_oprs     [] = the comparison-oprators for condition e.g: ["=",">"] \n
+        ---condition_sep_oprs [] = the comparison-oprators for seperating conditions e.g: ["and","or"] \n
         '''
         if not table_name in self.tables:
             raise ValueError(f"No tables in database whith this name: '{table_name}'")
@@ -84,21 +83,34 @@ class Sql():
             return_value.append(self.data[table_name]["cols"])
         else:
             try :
-                pass
-                # cond_count = kwargs["condition_count"]
+                column = kwargs["column"]
+                exe = f'SELECT {column} FROM {table_name}'
+                _cols = self.data[table_name]["cols"]
+                return_value.append(_cols[_cols.index(kwargs["column"])])
+                # pass
                 # cond_columns = kwargs["condition_columns"]
                 # cond_values = kwargs["condition_values"]
-                # cond_types = kwargs["condition_v_types"]
                 # cond_oprs = kwargs["condition_oprs"]
+                # cond_sep_oprs = kwargs["condition_sep_oprs"]
             except KeyError:
                 return "Error:  ! Missing Kwargs !"
-            if "column" in kwargs.keys():
-                column = kwargs["column"]
-            exe = f'SELECT {column} FROM {table_name}'
-            
-            _cols = self.data[table_name]["cols"]
-            return_value.append(_cols[_cols.index(kwargs["column"])])
-            
+        
+        if "condition_columns" in kwargs.keys():
+            cond_columns = kwargs["condition_columns"]
+            cond_values = kwargs["condition_values"]
+            cond_oprs = kwargs["condition_oprs"]
+            if "condition_sep_oprs" in kwargs.keys(): cond_sep_oprs = kwargs["condition_sep_oprs"]
+            else: cond_sep_oprs = []
+
+            exe += f' WHERE '
+            for cond in cond_columns:
+                _index = cond_columns.index(cond)
+                exe += f" {cond} {cond_oprs[_index]} '{cond_values[_index]}'"
+                try:
+                    exe += f" {cond_sep_oprs[_index]}"
+                except IndexError:
+                    pass
+        
         self.cur.execute(exe)
         rows = self.cur.fetchall()
         for row in rows:
