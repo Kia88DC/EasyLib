@@ -300,6 +300,9 @@ QPushButton:disabled {
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(100, 100, 100);</string>
    </property>
@@ -358,6 +361,9 @@ QPushButton:disabled {
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(100, 100, 100);</string>
    </property>
@@ -413,6 +419,9 @@ QPushButton:disabled {
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">border-width:1px;
@@ -742,7 +751,10 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
      <number>3</number>
     </property>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>233</number>
+     <number>241</number>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
     </attribute>
     <row/>
     <row/>
@@ -1548,6 +1560,9 @@ QComboBox::drop-down {
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(175, 175, 175);</string>
    </property>
@@ -1608,6 +1623,9 @@ QComboBox::drop-down {
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(100, 100, 100);</string>
    </property>
@@ -1663,6 +1681,9 @@ QComboBox::drop-down {
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(100, 100, 100);</string>
@@ -2090,6 +2111,9 @@ QPushButton:pressed {
      </property>
      <property name="cursor">
       <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
      </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>

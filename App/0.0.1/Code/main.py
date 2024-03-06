@@ -19,7 +19,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 import Resources
 import os
 import sys
-from SimpleSql import Sql
+import SimpleSql
 import dogpile.cache
 
 # current_path = str(os.path.abspath(__file__)).strip("main.py")
@@ -52,7 +52,6 @@ def Caching_Key_Generator(mainArgs, args, kwargs, prefix:str="", sep:str="|"):
             key += str(kwargs[kwarg]) + sep
         key = key.strip(sep)
 
-    print(f"key= {key}")
     return key
 
 def cache_on_kwargs(func, namespace="", sep="|", key_generator=Caching_Key_Generator):
@@ -74,7 +73,7 @@ def cache_on_kwargs(func, namespace="", sep="|", key_generator=Caching_Key_Gener
 
     return wrapper
 
-class Datebase(Sql):
+class Datebase(SimpleSql.Sql):
     def __init__(self, db_name: str, all_db) -> None:
         super().__init__(db_name)
         self.All_DBs = all_db
@@ -91,9 +90,9 @@ class Datebase(Sql):
         return super().sql_show(table_name, all, **_kwargs)
 
 
-    def Search(self, text:str, category:str, tableName:str, opr:str="LIKE"):
+    def Search(self, text:str, category:str, tableName:str, opr:str="LIKE", all=True):
         # return self.cached_sql_show(tableName, all=True, column=category) 
-        return self.cached_sql_show(tableName, all=True, 
+        return self.cached_sql_show(tableName, all=all, 
             condition_columns=[category], 
             condition_values=[text], 
             condition_oprs=[opr], 
@@ -109,25 +108,29 @@ class MainWindow(QMainWindow, QDialog):
         
         # Start Local DataBase Connection
         self._all_DB_Tables = {
-            "All": ["Library", "Book", "User", "Transaction"],
+            "All": ["Library", "Category", "Book", "User", "Transaction"],
             "AllInstances": {},
+            "Category": {
+                "table" : "'id' INTEGER PRIMARY KEY AUTOINCREMENT, 'Name' TEXT NOT NULL UNIQUE",
+                "columns" : ["id", "Name"]
+            },
             "Library": {
-                "table" : "'id' INTEGER PRIMARY KEY, 'name' TEXT DEFAULT '-', 'librarian' TEXT DEFAULT '-', 'bookCount' INTEGER DEFAULT 0, 'userCount' INTEGER DEFAULT 0, 'created_at' TEXT",
-                "columns": ["id", "name", "librarian", "bookCount", "userCount", "created_at"]
+                "table" : "'id' INTEGER PRIMARY KEY, 'Name' TEXT DEFAULT '-', 'Librarian' TEXT DEFAULT '-', 'bookCount' INTEGER DEFAULT 0, 'userCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP",
+                "columns": ["id", "Name", "Librarian", "bookCount", "userCount"]
             },
             "Book": {
                 # "table" : "id INTEGER PRIMARY KEY,title TEXT,author TEXT,category TEXT,book_code TEXT,state_borrowed INTEGER,borrowedCount INTEGER,created_at TEXT",
-                "table" : "'id' INTEGER PRIMARY KEY, 'title' TEXT NOT NULL, 'author' TEXT, 'category' TEXT NOT NULL, 'book_code' TEXT, 'state_borrowed' INTEGER DEFAULT 0, 'borrowedCount' INTEGER DEFAULT 0, 'created_at' TEXT",
-                "columns": ["id", "title", "author", "category", "book_code", "state_borrowed", "borrowedCount", "created_at"]
+                "table" : "'id' INTEGER PRIMARY KEY, 'Title' TEXT NOT NULL, 'Author' TEXT, 'Category' TEXT NOT NULL, 'book_code' TEXT, 'state_borrowed' INTEGER DEFAULT 0, 'borrowedCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY('Category') REFERENCES 'Category'('Name')",
+                "columns": ["id", "Title", "Author", "Category", "book_code", "state_borrowed", "borrowedCount", "created_at"]
             },
             "User": {
                 # "table" : "id INTEGER PRIMARY KEY,name TEXT,user_code TEXT,number TEXT,state_subscribed INTEGER,subExpDate TEXT,state_hasBorrowed INTEGER,currBorrowedCount INTEGER,created_at TEXT",
-                "table" : "'id' INTEGER PRIMARY KEY, 'name' TEXT NOT NULL, 'user_code' TEXT, 'number' TEXT, 'state_subscribed' INTEGER DEFAULT 1, 'subExpDate' TEXT NOT NULL, 'state_hasBorrowed' INTEGER DEFAULT 0, 'currBorrowedCount' INTEGER DEFAULT 0, 'created_at' TEXT",
-                "columns": ["id", "name", "user_code", "number", "state_subscribed", "subExpDate", "state_hasBorrowed", "currBorrowedCount", "created_at"]
+                "table" : "'id' INTEGER PRIMARY KEY, 'Name' TEXT NOT NULL, 'user_code' TEXT, 'Number' TEXT, 'state_subscribed' INTEGER DEFAULT 1, 'subExpDate' TEXT NOT NULL, 'state_hasBorrowed' INTEGER DEFAULT 0, 'currBorrowedCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP",
+                "columns": ["id", "Name", "user_code", "Number", "state_subscribed", "subExpDate", "state_hasBorrowed", "currBorrowedCount", "created_at"]
             },
             "Transaction": {
                 # "table" : "id INTEGER PRIMARY KEY,user_id TEXT,book_id TEXT,title TEXT,state_done INTEGER,borrowDate TEXT,retrieveDate TEXT,renewCount INTEGER,created_at TEXT",
-                "table" : "'id' INTEGER PRIMARY KEY, 'user_id' TEXT NOT NULL, 'book_id' TEXT NOT NULL, 'state_done' INTEGER DEFAULT 0, 'borrowDate' TEXT NOT NULL, 'retrieveDate' TEXT, 'renewCount' INTEGER DEFAULT 0, 'created_at' TEXT, FOREIGN KEY('user_id') REFERENCES 'User'('id'), FOREIGN KEY('book_id') REFERENCES 'User'('id')",
+                "table" : "'id' INTEGER PRIMARY KEY, 'user_id' TEXT NOT NULL, 'book_id' TEXT NOT NULL, 'state_done' INTEGER DEFAULT 0, 'borrowDate' TEXT NOT NULL, 'retrieveDate' TEXT, 'renewCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY('user_id') REFERENCES 'User'('id'), FOREIGN KEY('book_id') REFERENCES 'Book'('id')",
                 "columns": ["id", "user_id", "book_id", "state_done", "borrowDate", "retrieveDate", "renewCount", "created_at"]
             }
         }
@@ -157,8 +160,8 @@ class MainWindow(QMainWindow, QDialog):
 
         # Pre Start
         self.library = self.database.cached_sql_show("Library", all=True)[1]
-        self.lbl_info_LibName.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("name")]))
-        self.lbl_info_Librarian.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("librarian")]))
+        self.lbl_info_LibName.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("Name")]))
+        self.lbl_info_Librarian.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("Librarian")]))
         self.lbl_info_BookCount.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("bookCount")]))
         self.lbl_info_UserCount.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("userCount")]))
 
@@ -192,24 +195,43 @@ class Books_Screen(QDialog):
 
         # define var
         self.SearchCategories = {
-            "عنوان": "title", 
-            "نویسنده": "author", 
-            "موضوع": "category", 
+            "عنوان": "Title", 
+            "نویسنده": "Author", 
+            "موضوع": "Category", 
             "کد کتاب": "book_code"
         }
+        self.info_widgets = {}
 
         # define Widgets
         self.btn_menu_home = self.findChild(QtWidgets.QPushButton, "btn_menu_home")
         self.btn_menu_user = self.findChild(QtWidgets.QPushButton, "btn_menu_users")
         self.btn_menu_transaction = self.findChild(QtWidgets.QPushButton, "btn_menu_transactions")
-        # Search widgets
+        #                     Search widgets
         self.btn_search = self.findChild(QtWidgets.QPushButton, "btn_Search")
         self.inp_search_box = self.findChild(QtWidgets.QLineEdit, "inp_search_box")
         self.inp_search_category = self.findChild(QtWidgets.QComboBox, "inp_search_category")
         self.tableWidget_search_results = self.findChild(QtWidgets.QTableWidget, "tableWidget_search_results")
+        #                     info widgets
+        self.inp_book_title = self.findChild(QtWidgets.QLineEdit, "input_book_title")
+        self.info_widgets["Title"] = self.inp_book_title
+        self.inp_book_author = self.findChild(QtWidgets.QLineEdit, "input_book_author")
+        self.info_widgets["Author"] = self.inp_book_author
+        self.inp_book_category = self.findChild(QtWidgets.QLineEdit, "input_book_category")
+        self.info_widgets["Category"] = self.inp_book_category
+        self.inp_book_code = self.findChild(QtWidgets.QLineEdit, "input_book_code")
+        self.info_widgets["book_code"] = self.inp_book_code
+        self.lbl_book_state = self.findChild(QtWidgets.QLabel, "lbl_book_state")
+        self.info_widgets["state_borrowed"] = self.lbl_book_state
+        self.lbl_book_LendCount = self.findChild(QtWidgets.QLabel, "lbl_book_LendCount")
+        self.info_widgets["borrowedCount"] = self.lbl_book_LendCount
+        self.btn_book_save = self.findChild(QtWidgets.QPushButton, "btn_book_save")
         #
 
         # Pre Start
+        self._clearRows(self.tableWidget_search_results)
+        #                     info
+        self.btn_book_save.hide()
+        self._clearInfo()
 
         # set Signals/Slots
         self.btn_menu_home.clicked.connect(lambda : Switch_Screen(main_widgets, "home"))
@@ -217,6 +239,8 @@ class Books_Screen(QDialog):
         self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen(main_widgets, "transaction"))
         # Search action
         self.btn_search.clicked.connect(lambda : self.BookSearch())
+        # Book Select
+        self.tableWidget_search_results.itemSelectionChanged.connect(lambda : self.ShowBook())
         #
     
 
@@ -228,12 +252,27 @@ class Books_Screen(QDialog):
         _serach_category = self.SearchCategories[self.inp_search_category.currentText()]
         _search_text = self.inp_search_box.text()
         
-        _results = self.mainwindow.database.Search(text=f"%{_search_text}%", category=_serach_category, tableName="Book", opr="LIKE")
-        if len(_results) < 2:
+        try:
+            _results = self.mainwindow.database.Search(text=f"%{_search_text}%", category=_serach_category, tableName="Book", opr="LIKE")
+        except SimpleSql.SqlSelectError.NoDataFoundError:
             showMessageBox("", "هیچ کتابی با این مشخصات پیدا نشد!", icon="", buttons=True)
             self._clearRows(self.tableWidget_search_results)
             return None
         self.ShowSearchResults(_results[1:])
+
+    def _clearInfo(self):
+        self.inp_book_title.clear()
+        self.inp_book_author.clear()
+        self.inp_book_category.clear()
+        self.inp_book_code.clear()
+
+        self.inp_book_title.setReadOnly(True)
+        self.inp_book_author.setReadOnly(True)
+        self.inp_book_category.setReadOnly(True)
+        self.inp_book_code.setReadOnly(True)
+
+        self.lbl_book_state.setText("")
+        self.lbl_book_LendCount.setText("")
 
     def _clearRows(self, table:QtWidgets.QTableWidget):
         rc = table.rowCount()
@@ -242,7 +281,7 @@ class Books_Screen(QDialog):
 
     def ShowSearchResults(self, results:list[tuple]):
         self._clearRows(self.tableWidget_search_results)
-        
+
         for row in results:
             _pose = self.tableWidget_search_results.rowCount()
             self.tableWidget_search_results.insertRow(_pose)
@@ -254,6 +293,22 @@ class Books_Screen(QDialog):
 
                 self.tableWidget_search_results.setItem(_pose , _col_index-1, QtWidgets.QTableWidgetItem(str(_value)))
 
+    def _selectBook(self):
+        _book_code = self.tableWidget_search_results.selectedItems()[3].text()
+        return self.mainwindow.database.Search(text=_book_code, category="book_code", tableName="Book", opr="=")[1]
+
+    def ShowBook(self):
+        self._clearInfo()
+        _book = self._selectBook()
+        
+        self.inp_book_title.setReadOnly(False)
+        self.inp_book_author.setReadOnly(False)
+        self.inp_book_category.setReadOnly(False)
+        self.inp_book_code.setReadOnly(False)
+
+        for column in self.info_widgets.keys():
+            _col_index = self.mainwindow._all_DB_Tables["Book"]["columns"].index(column)
+            self.info_widgets[column].setText(str(_book[_col_index]))
 
 
 # Users Screen Class -> User UI

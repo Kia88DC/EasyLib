@@ -3,7 +3,17 @@
 # |   By @Kia88DC   |
 # |                 |
 #  -----------------
-__version__ = "3.1.0"
+__version__ = "3.2.0"
+
+
+
+class SqlSelectError(Exception):
+    class NoDataFoundError(Exception):
+        def __init__(self, message, query):            
+            super().__init__(message)
+            self.query = query
+
+
 
 class Sql():
     def __init__(self, db_name:str) -> None:
@@ -115,6 +125,8 @@ class Sql():
         rows = self.cur.fetchall()
         for row in rows:
                 return_value.append(row)
+        if len(return_value) < 2:
+            raise SqlSelectError.NoDataFoundError("No Matching Data With Given Conditions!", exe)
         return return_value
 
     def sql_update(self, table_name:str, column:str, new_value, condition_column:str, condition_opr, condition_value) -> None:

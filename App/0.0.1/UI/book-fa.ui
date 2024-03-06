@@ -36,6 +36,9 @@ QMainWindow {
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
+   </property>
    <property name="styleSheet">
     <string notr="true">border-width:1px;
 border-style:solid;
@@ -570,6 +573,9 @@ QPushButton:pressed {
      <property name="cursor">
       <cursorShape>PointingHandCursor</cursorShape>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
      <property name="layoutDirection">
       <enum>Qt::LeftToRight</enum>
      </property>
@@ -806,7 +812,7 @@ color: rgb(50, 50, 50);</string>
      <string>کد کتاب:</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="input_book_name">
+   <widget class="QLineEdit" name="input_book_title">
     <property name="geometry">
      <rect>
       <x>330</x>
@@ -858,7 +864,7 @@ color: rgb(75, 75, 75);</string>
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLineEdit" name="input_book_author_name">
+   <widget class="QLineEdit" name="input_book_author">
     <property name="geometry">
      <rect>
       <x>330</x>
@@ -1476,6 +1482,9 @@ QComboBox::drop-down {
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="focusPolicy">
+    <enum>Qt::NoFocus</enum>
    </property>
    <property name="styleSheet">
     <string notr="true">color: rgb(100, 100, 100);</string>
@@ -2207,7 +2216,13 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
      <number>4</number>
     </property>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>175</number>
+     <number>181</number>
+    </attribute>
+    <attribute name="verticalHeaderVisible">
+     <bool>false</bool>
+    </attribute>
+    <attribute name="verticalHeaderHighlightSections">
+     <bool>true</bool>
     </attribute>
     <row/>
     <row/>

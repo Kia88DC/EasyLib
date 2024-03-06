@@ -100,6 +100,9 @@ QMainWindow {
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(100, 100, 100);</string>
     </property>
@@ -139,6 +142,9 @@ QMainWindow {
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(100, 100, 100);</string>
     </property>
@@ -163,6 +169,9 @@ QMainWindow {
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
     </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
+    </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(100, 100, 100);</string>
     </property>
@@ -186,6 +195,9 @@ QMainWindow {
     </property>
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(100, 100, 100);</string>
@@ -239,6 +251,9 @@ QMainWindow {
     </property>
     <property name="cursor">
      <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::NoFocus</enum>
     </property>
     <property name="styleSheet">
      <string notr="true">color: rgb(175, 175, 175);</string>
