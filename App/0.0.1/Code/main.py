@@ -225,6 +225,13 @@ class Books_Screen(QDialog):
         self.lbl_book_LendCount = self.findChild(QtWidgets.QLabel, "lbl_book_LendCount")
         self.info_widgets["borrowedCount"] = self.lbl_book_LendCount
         self.btn_book_save = self.findChild(QtWidgets.QPushButton, "btn_book_save")
+        #                     addBook widgets
+        self.input_bookAdd_title = self.findChild(QtWidgets.QLineEdit, "input_bookAdd_title")
+        self.input_bookAdd_author = self.findChild(QtWidgets.QLineEdit, "input_bookAdd_author")
+        self.input_bookAdd_category = self.findChild(QtWidgets.QComboBox, "ComboBox_bookAdd_category")
+        self.input_bookAdd_book_code = self.findChild(QtWidgets.QLineEdit, "input_bookAdd_book_code")
+        self.ChBox_automatic_code = self.findChild(QtWidgets.QCheckBox, "ChBox_automatic_code")
+        self.btn_bookAdd_submit = self.findChild(QtWidgets.QPushButton, "btn_bookAdd_submit")
         #
 
         # Pre Start
@@ -241,6 +248,8 @@ class Books_Screen(QDialog):
         self.btn_search.clicked.connect(lambda : self.BookSearch())
         # Book Select
         self.tableWidget_search_results.itemSelectionChanged.connect(lambda : self.ShowBook())
+        # Book Add
+        self.btn_bookAdd_submit.clicked.connect(lambda : self.AddBook())
         #
     
 
@@ -309,6 +318,28 @@ class Books_Screen(QDialog):
         for column in self.info_widgets.keys():
             _col_index = self.mainwindow._all_DB_Tables["Book"]["columns"].index(column)
             self.info_widgets[column].setText(str(_book[_col_index]))
+
+    def _codeCreate(self, _category):
+        _id = f'{self.mainwindow.database.cur.execute("SELECT MAX(id) from Book;").fetchone()[0]:03}'
+        query = f"SELECT CodeName from Category WHERE Name = '{_category}';"
+        _cat = f"{self.mainwindow.database.cur.execute(query).fetchone()[0]}"
+        _num = ""
+        import random
+        for i in range(4):
+            _num += str(random.randint(0, 9))
+        return str(f"{_cat}{_id}{_num}")
+
+    def AddBook(self):
+        _title = self.input_bookAdd_title.text()
+        _author = self.input_bookAdd_author.text()
+        _category = self.input_bookAdd_category.currentText()
+        _book_code = self.input_bookAdd_book_code.text()
+        if self.ChBox_automatic_code.isChecked():
+           _book_code = self._codeCreate(_category)
+        try:
+            self.mainwindow.database.sql_insert("Book", "Title,Author,Category,book_code", "?,?,?,?", (str(_title), str(_author), str(_category), str(_book_code)))
+        except:
+            self.AddBook()
 
 
 # Users Screen Class -> User UI
