@@ -106,6 +106,10 @@ class Datebase(SimpleSql.Sql):
         self.sql_delete_row(tableName, condition=not deleteAll, condition_columns=[searchCol], condition_values=[searchValue], condition_oprs=[searchOpr])
         self._ExpireCache(hard=True)
 
+    def Update(self, tableName, targetColumn, newValue, condition_column, condition_opr, condition_value):
+        self.sql_update(tableName, targetColumn, newValue, condition_column, condition_opr, condition_value)
+        self._ExpireCache(hard=True)
+
 
 # Main Window Class -> Home UI
 class MainWindow(QMainWindow, QDialog):
@@ -133,7 +137,7 @@ class MainWindow(QMainWindow, QDialog):
             },
             "User": {
                 # "table" : "id INTEGER PRIMARY KEY,name TEXT,user_code TEXT,number TEXT,state_subscribed INTEGER,subExpDate TEXT,state_hasBorrowed INTEGER,currBorrowedCount INTEGER,created_at TEXT",
-                "table" : "'id' INTEGER PRIMARY KEY, 'Name' TEXT NOT NULL, 'user_code' TEXT UNIQUE, 'Number' TEXT, 'state_subscribed' INTEGER DEFAULT 1, 'subExpDate' TEXT NOT NULL, 'state_hasBorrowed' INTEGER DEFAULT 0, 'currBorrowedCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP",
+                "table" : "'id' INTEGER PRIMARY KEY, 'Name' TEXT NOT NULL, 'user_code' TEXT NOT NULL UNIQUE, 'Number' TEXT, 'state_subscribed' INTEGER DEFAULT 1, 'subExpDate' TEXT NOT NULL, 'state_hasBorrowed' INTEGER DEFAULT 0, 'currBorrowedCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP",
                 "columns": ["id", "Name", "user_code", "Number", "state_subscribed", "subExpDate", "state_hasBorrowed", "currBorrowedCount", "created_at"]
             },
             "Transaction": {
@@ -167,6 +171,11 @@ class MainWindow(QMainWindow, QDialog):
         #
 
         # Pre Start
+        _libBookCount, _libUserCount = self.database.cur.execute("SELECT  (SELECT COUNT(*) FROM Book) As bookCount, (SELECT COUNT(*) FROM User) as userCount;").fetchone()
+        _libName, _libLibrarian, _libCreated_at = self.database.cur.execute("SELECT  Name, Librarian, created_at FROM Library;").fetchone()
+        self.database.Delete("Library", "id", "1", "=")
+        self.database.Add("Library", ["Name", "Librarian", "bookCount", "userCount", "created_at"], (_libName, _libLibrarian, _libBookCount, _libUserCount, _libCreated_at))
+        #
         self.library = self.database.cached_sql_show("Library", all=True)[1]
         self.lbl_info_LibName.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("Name")]))
         self.lbl_info_Librarian.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("Librarian")]))
@@ -369,7 +378,6 @@ class Books_Screen(QDialog):
         query = f"SELECT CodeName from Category WHERE Name = '{_category}';"
         _cat = f"{self.mainwindow.database.cur.execute(query).fetchone()[0]}"
         _num = ""
-        print(f"id= {_id}, cat= {_cat}")
         import random
         for i in range(4):
             _num += str(random.randint(0, 9))
@@ -402,6 +410,7 @@ class Books_Screen(QDialog):
                 return None
         showMessageBox("موفقیت", "کتاب مورد نظر با موفقیت اضافه شد.")
         self._clear(infoBox=True, delBox=True, addBox=True)
+        self._clearRows(self.tableWidget_search_results)
 
     def DeleteBook(self):
         if not self.__item_is_selected:
@@ -411,6 +420,7 @@ class Books_Screen(QDialog):
         self.mainwindow.database.Delete("Book", "book_code", _book_code, "=")
         showMessageBox("موفقیت", "کتاب مورد نظر با موفقیت حذف شد.")
         self._clear(infoBox=True, delBox=True)
+        self._clearRows(self.tableWidget_search_results)
 
 
 # Users Screen Class -> User UI
@@ -424,20 +434,266 @@ class Users_Screen(QDialog):
         loadUi(f"{current_path}/UI/user-fa.ui", self)
 
         # define var
+        self.SearchCategories = {
+            "نام": "Name", 
+            "شناسه": "user_code", 
+            "شماره تلفن": "Number", 
+        }
+        self.subAmount_Directives = {
+            "یک ماه":   {"Directive": "%m", "Addition": 1},
+            "دو ماه":   {"Directive": "%m", "Addition": 2},
+            "سه ماه":   {"Directive": "%m", "Addition": 3},
+            "چهار ماه": {"Directive": "%m", "Addition": 4},
+            "شش ماه":   {"Directive": "%m", "Addition": 6},
+            "یک سال":   {"Directive": "%Y", "Addition": 1},
+            "دو سال":   {"Directive": "%Y", "Addition": 2},
+        }
+        self.info_widgets = {}
+        self.__clear_in_progress = False
+        self.__item_is_selected = False
 
         # define Widgets
         self.btn_menu_home = self.findChild(QtWidgets.QPushButton, "btn_menu_home")
         self.btn_menu_book = self.findChild(QtWidgets.QPushButton, "btn_menu_books")
         self.btn_menu_transaction = self.findChild(QtWidgets.QPushButton, "btn_menu_transactions")
+        #                     Search widgets
+        self.btn_search = self.findChild(QtWidgets.QPushButton, "btn_Search")
+        self.inp_search_box = self.findChild(QtWidgets.QLineEdit, "inp_search_box")
+        self.inp_search_category = self.findChild(QtWidgets.QComboBox, "inp_search_category")
+        self.tableWidget_search_results = self.findChild(QtWidgets.QTableWidget, "tableWidget_search_results")
+        #                     info widgets
+        self.info_widgets["info"] = {}
+        self.inp_user_name = self.findChild(QtWidgets.QLineEdit, "input_user_name")
+        self.info_widgets["info"]["Name"] = self.inp_user_name
+        self.inp_user_code = self.findChild(QtWidgets.QLineEdit, "input_user_code")
+        self.info_widgets["info"]["user_code"] = self.inp_user_code
+        self.inp_user_number = self.findChild(QtWidgets.QLineEdit, "input_user_number")
+        self.info_widgets["info"]["Number"] = self.inp_user_number
+        self.lbl_user_borrow_state = self.findChild(QtWidgets.QLabel, "lbl_user_borrow_state")
+        self.info_widgets["info"]["state_hasBorrowed"] = self.lbl_user_borrow_state
+        self.lbl_user_subscribtion_state = self.findChild(QtWidgets.QLabel, "lbl_user_subscribtion_state")
+        self.info_widgets["info"]["state_subscribed"] = self.lbl_user_subscribtion_state
+        self.lbl_user_borrow_count = self.findChild(QtWidgets.QLabel, "lbl_user_borrow_count")
+        self.info_widgets["info"]["currBorrowedCount"] = self.lbl_user_borrow_count
+        self.btn_user_save = self.findChild(QtWidgets.QPushButton, "btn_user_save")
+        #                     addBook widgets
+        self.input_userAdd_name = self.findChild(QtWidgets.QLineEdit, "input_userAdd_name")
+        self.input_userAdd_user_code = self.findChild(QtWidgets.QLineEdit, "input_userAdd_user_code")
+        self.input_userAdd_number = self.findChild(QtWidgets.QLineEdit, "input_userAdd_number")
+        self.input_userAdd_subAmount = self.findChild(QtWidgets.QComboBox, "ComboBox_userAdd_subAmount")
+        self.ChBox_automatic_code = self.findChild(QtWidgets.QCheckBox, "ChBox_userAdd_automatic_code")
+        self.btn_userAdd_submit = self.findChild(QtWidgets.QPushButton, "btn_userAdd_submit")
+        #                     delUser widgets
+        self.info_widgets["delUser"] = {}
+        self.lbl_delUser_name = self.findChild(QtWidgets.QLabel, "lbl_delUser_name")
+        self.info_widgets["delUser"]["Name"] = self.lbl_delUser_name
+        self.lbl_delUser_user_code = self.findChild(QtWidgets.QLabel, "lbl_delUser_user_code")
+        self.info_widgets["delUser"]["user_code"] = self.lbl_delUser_user_code
+        self.lbl_delUser_number = self.findChild(QtWidgets.QLabel, "lbl_delUser_number")
+        self.info_widgets["delUser"]["Number"] = self.lbl_delUser_number
+        self.btn_delUser_submit = self.findChild(QtWidgets.QPushButton, "btn_delUser_submit")
+        #                     subRenew widgets
+        self.info_widgets["renewSub"] = {}
+        self.lbl_renewSub_name = self.findChild(QtWidgets.QLabel, "lbl_renewSub_name")
+        self.info_widgets["renewSub"]["Name"] = self.lbl_renewSub_name
+        self.lbl_renewSub_user_code = self.findChild(QtWidgets.QLabel, "lbl_renewSub_user_code")
+        self.info_widgets["renewSub"]["user_code"] = self.lbl_renewSub_user_code
+        self.input_renewSub_amount = self.findChild(QtWidgets.QComboBox, "ComboBox_renewSub_amount")
+        self.btn_renewSub_submit = self.findChild(QtWidgets.QPushButton, "btn_renewSub_submit")
         #
 
         # Pre Start
+        self._clearRows(self.tableWidget_search_results)
+        #                     info
+        self.btn_user_save.hide()
+        self._clear()
 
         # set Signals/Slots
         self.btn_menu_home.clicked.connect(lambda : Switch_Screen(main_widgets, "home"))
         self.btn_menu_book.clicked.connect(lambda : Switch_Screen(main_widgets, "book"))
         self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen(main_widgets, "transaction"))
+        # Search action
+        self.btn_search.clicked.connect(lambda : self.UserSearch())
+        # User Select
+        self.tableWidget_search_results.itemSelectionChanged.connect(lambda : self.ShowUser())
+        # User Add
+        self.btn_userAdd_submit.clicked.connect(lambda : self.AddUser())
+        # User Del
+        self.btn_delUser_submit.clicked.connect(lambda : self.DeleteUser())
+        # Renew Sub
+        self.btn_renewSub_submit.clicked.connect(lambda : self.RenewSub())
         #
+    
+
+    def UserSearch(self, _search_category=None):
+        self._clear()
+        if self.inp_search_category.currentIndex() == 0 and _search_category == None:
+            showMessageBox("خطا!", "لطفا ابتدا دسته بندی جستجو را انتخاب کنید.", icon="Critical")
+            return None
+        if not _search_category:
+            _search_category = self.SearchCategories[self.inp_search_category.currentText()]
+        _search_text = self.inp_search_box.text()
+        
+        _results = self.mainwindow.database.Search(text=f"%{_search_text}%", category=_search_category, tableName="User", opr="LIKE")
+        if _results == None:
+            showMessageBox("", "هیچ عضوی با این مشخصات پیدا نشد!", icon="")
+            self._clearRows(self.tableWidget_search_results)
+            return None
+        self.ShowSearchResults(_results[1:])
+
+    def _clear(self, infoBox=True, delBox=True, renewBox=True, addBox=False):
+        if infoBox:
+            self.inp_user_name.clear()
+            self.inp_user_code.clear()
+            self.inp_user_number.clear()
+            self.inp_user_name.setReadOnly(True)
+            self.inp_user_code.setReadOnly(True)
+            self.inp_user_number.setReadOnly(True)
+            self.lbl_user_borrow_state.setText("")
+            self.lbl_user_borrow_count.setText("")
+            self.lbl_user_subscribtion_state.setText("")
+        
+        if delBox:
+            self.__item_is_selected = False
+            self.lbl_delUser_name.clear()
+            self.lbl_delUser_user_code.clear()
+            self.lbl_delUser_number.clear()
+        
+        if renewBox:
+            self.lbl_renewSub_name.clear()
+            self.lbl_renewSub_user_code.clear()
+
+        if addBox:
+            self.input_userAdd_name.clear()
+            self.input_userAdd_user_code.clear()
+            self.input_userAdd_number.clear()
+
+    def _clearRows(self, table:QtWidgets.QTableWidget):
+        self.__clear_in_progress = True
+        rc = table.rowCount()
+        for row in range(rc):
+            table.removeRow(rc-row-1)
+        self.__clear_in_progress = False
+
+    def ShowSearchResults(self, results:list[tuple]):
+        self._clearRows(self.tableWidget_search_results)
+
+        for row in results:
+            _pose = self.tableWidget_search_results.rowCount()
+            self.tableWidget_search_results.insertRow(_pose)
+
+            for column in [self.SearchCategories[key] for key in self.SearchCategories.keys()]:
+                _col_index = self.mainwindow._all_DB_Tables["User"]["columns"].index(column)
+                _value = row[_col_index]
+                if _value == None: _value = ""
+
+                self.tableWidget_search_results.setItem(_pose , _col_index-1, QtWidgets.QTableWidgetItem(str(_value)))
+
+    def _selectUser(self):
+        _user_code = self.tableWidget_search_results.selectedItems()[1].text()
+        self.__item_is_selected = True
+        return self.mainwindow.database.Search(text=_user_code, category="user_code", tableName="User", opr="=")[1]
+
+    def ShowUser(self):
+        if self.__clear_in_progress:
+            return None
+        self._clear()
+        _user = self._selectUser()
+        
+        self.inp_user_name.setReadOnly(False)
+        self.inp_user_code.setReadOnly(False)
+        self.inp_user_number.setReadOnly(False)
+
+        for column in self.info_widgets["info"].keys():
+            _col_index = self.mainwindow._all_DB_Tables["User"]["columns"].index(column)
+            self.info_widgets["info"][column].setText(str(_user[_col_index]))
+        
+        for column in self.info_widgets["delUser"].keys():
+            _col_index = self.mainwindow._all_DB_Tables["User"]["columns"].index(column)
+            self.info_widgets["delUser"][column].setText(str(_user[_col_index]))
+
+        for column in self.info_widgets["renewSub"].keys():
+            _col_index = self.mainwindow._all_DB_Tables["User"]["columns"].index(column)
+            self.info_widgets["renewSub"][column].setText(str(_user[_col_index]))
+
+    def _codeCreate(self):
+        _id = f'{self.mainwindow.database.cur.execute("SELECT MAX(id) from User;").fetchone()[0]:03}'
+        _cat = "UID"
+        _num = ""
+        import random
+        for i in range(3):
+            _num += str(random.randint(0, 9))
+        return str(f"{_cat}{_id}{_num}")
+
+    def AddUser(self):
+        _name = self.input_userAdd_name.text()
+        _user_code = self.input_userAdd_user_code.text()
+        _number = self.input_userAdd_number.text()
+        _subAmount = self.input_userAdd_subAmount.currentText()
+        if _name == "" or _number == "" or _user_code == "" and not self.ChBox_automatic_code.isChecked():
+            showMessageBox("خطا!", "لطفا ابتدا اطلاعات عضو را وارد کنید.", icon="Critical")
+            return None
+        if self.input_userAdd_subAmount.currentIndex() == 0:
+            showMessageBox("خطا!", "لطفا ابتدا مدت عضویت را انتخاب کنید.", icon="Critical")
+            return None
+        
+        if self.ChBox_automatic_code.isChecked():
+           _user_code = self._codeCreate()
+
+        import time
+        _targetVal = int(time.strftime(self.subAmount_Directives[_subAmount]["Directive"]))
+        _targetVal += int(self.subAmount_Directives[_subAmount]["Addition"])
+        _targetVal = f'{_targetVal:02}'
+        if self.subAmount_Directives[_subAmount]["Directive"] == "%Y":
+            _subExpDate = time.strftime(f"{_targetVal}-%m-%d %H:%M:%S")
+        elif self.subAmount_Directives[_subAmount]["Directive"] == "%m":
+            _subExpDate = time.strftime(f"%Y-{_targetVal}-%d %H:%M:%S")
+
+        import sqlite3
+        try:
+            self.mainwindow.database.Add("User", "Name,user_code,Number,subExpDate", (str(_name), str(_user_code), str(_number), str(_subExpDate)))
+        except sqlite3.IntegrityError:
+            if self.ChBox_automatic_code.isChecked():
+                self.AddUser()
+            else:
+                showMessageBox("خطا!", "شناسه عضو نباید تکراری باشد!", icon="Warning")
+                return None
+        showMessageBox("موفقیت", "عضو مورد نظر با موفقیت اضافه شد.")
+        self._clear(infoBox=True, delBox=True, renewBox=True, addBox=True)
+        self._clearRows(self.tableWidget_search_results)
+
+    def DeleteUser(self):
+        if not self.__item_is_selected:
+            showMessageBox("خطا!", "لطفا ابتدا یک عضو را انتخاب کنید.", icon="Critical")
+            return None
+        _user_code = self.lbl_delUser_user_code.text()
+        self.mainwindow.database.Delete("User", "user_code", _user_code, "=")
+        showMessageBox("موفقیت", "عضو مورد نظر با موفقیت حذف شد.")
+        self._clear(infoBox=True, delBox=True, renewBox=True)
+        self._clearRows(self.tableWidget_search_results)
+
+    def RenewSub(self):
+        if self.input_renewSub_amount.currentIndex() == 0:
+            showMessageBox("خطا!", "لطفا ابتدا مدت تمدید را انتخاب کنید.", icon="Critical")
+            return None
+        _subRenewAmount = self.input_renewSub_amount.currentText()
+        _user_code = self.lbl_renewSub_user_code.text()
+
+        _targetVal = self.mainwindow.database.cached_sql_show("User", all=False, column="subExpDate", condition_columns=["user_code"], condition_values=[_user_code],  condition_oprs=["="])[1][0]
+        _targetVal_year  = _targetVal.split(" ")[0].split("-")[0]
+        _targetVal_month = _targetVal.split(" ")[0].split("-")[1]
+        _targetVal_other = _targetVal.split(" ")[0].split("-")[2] + " " + _targetVal.split(" ")[1]
+
+        if self.subAmount_Directives[_subRenewAmount]["Directive"] == "%Y":
+            _subExpDate = int(_targetVal.split(" ")[0].split("-")[0]) + int(self.subAmount_Directives[_subRenewAmount]["Addition"])
+            _subExpDate = f"{_subExpDate}-{_targetVal_month}-{_targetVal_other}"
+        elif self.subAmount_Directives[_subRenewAmount]["Directive"] == "%m":
+            _subExpDate = int(_targetVal.split(" ")[0].split("-")[1]) + int(self.subAmount_Directives[_subRenewAmount]["Addition"])
+            _subExpDate = f'{_subExpDate:02}'
+            _subExpDate = f"{_targetVal_year}-{_subExpDate}-{_targetVal_other}"
+        
+        self.mainwindow.database.Update("User", "subExpDate", _subExpDate, "user_code", "=", _user_code)
+        showMessageBox("موفقیت", "مدت اشتراک عضو مورد نظر با موفقیت تمدید شد.")
 
 
 # Transactions Screen Class -> Transaction UI

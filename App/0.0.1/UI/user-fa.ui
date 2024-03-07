@@ -941,7 +941,7 @@ color: rgb(50, 50, 50);</string>
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>50</y>
+      <y>10</y>
       <width>120</width>
       <height>30</height>
      </rect>
@@ -1043,7 +1043,7 @@ color: rgb(50, 50, 50);</string>
     <property name="geometry">
      <rect>
       <x>90</x>
-      <y>50</y>
+      <y>10</y>
       <width>110</width>
       <height>30</height>
      </rect>
@@ -1157,7 +1157,7 @@ color: rgb(75, 75, 75);</string>
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLineEdit" name="input_user_id">
+   <widget class="QLineEdit" name="input_user_code">
     <property name="geometry">
      <rect>
       <x>330</x>
@@ -1271,7 +1271,7 @@ color: rgb(75, 75, 75);</string>
     <property name="geometry">
      <rect>
       <x>210</x>
-      <y>10</y>
+      <y>50</y>
       <width>110</width>
       <height>30</height>
      </rect>
@@ -1289,7 +1289,7 @@ color: rgb(75, 75, 75);</string>
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>10</y>
+      <y>50</y>
       <width>110</width>
       <height>30</height>
      </rect>
@@ -1772,7 +1772,7 @@ background-color: rgb(255, 240, 200);</string>
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_delUser_id">
+    <widget class="QLabel" name="lbl_delUser_user_code">
      <property name="geometry">
       <rect>
        <x>70</x>
@@ -1954,7 +1954,7 @@ color: rgb(50, 50, 50);</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLineEdit" name="input_addUser_name">
+    <widget class="QLineEdit" name="input_userAdd_name">
      <property name="geometry">
       <rect>
        <x>180</x>
@@ -2006,7 +2006,7 @@ background-color: rgb(207, 234, 255);</string>
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QLineEdit" name="input_addUser_number">
+    <widget class="QLineEdit" name="input_userAdd_number">
      <property name="geometry">
       <rect>
        <x>180</x>
@@ -2058,7 +2058,7 @@ background-color: rgb(207, 234, 255);</string>
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_addUser_submit">
+    <widget class="QPushButton" name="btn_userAdd_submit">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -2100,7 +2100,7 @@ QPushButton:pressed {
       <string>افزودن</string>
      </property>
     </widget>
-    <widget class="QCheckBox" name="ChBox_addUser_automatic_id">
+    <widget class="QCheckBox" name="ChBox_userAdd_automatic_code">
      <property name="geometry">
       <rect>
        <x>20</x>
@@ -2122,10 +2122,10 @@ QPushButton:pressed {
       <string>خودکار</string>
      </property>
      <property name="checked">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLineEdit" name="input_addUser_id">
+    <widget class="QLineEdit" name="input_userAdd_user_code">
      <property name="geometry">
       <rect>
        <x>80</x>
@@ -2176,56 +2176,123 @@ background-color: rgb(207, 234, 255);</string>
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_addUser_image">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
+    <widget class="QComboBox" name="ComboBox_userAdd_subAmount">
      <property name="geometry">
       <rect>
        <x>20</x>
        <y>120</y>
        <width>150</width>
-       <height>32</height>
+       <height>30</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+      </font>
      </property>
      <property name="cursor">
       <cursorShape>PointingHandCursor</cursorShape>
      </property>
      <property name="focusPolicy">
-      <enum>Qt::TabFocus</enum>
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
      </property>
      <property name="styleSheet">
-      <string notr="true">/*
-border-width:1px;
-border-style:solid;
-border-radius: 12px;
-border-color: rgba(244, 244, 244, 0);
-background-color: rgb(225, 225, 225);
-color: rgb(50, 50, 50);
-*/
+      <string notr="true">
 
-QPushButton {
-	border-width:1px;
-	border-style:solid;
-	border-radius: 15px;
-	border-color: rgba(244, 244, 244, 0);
-	background-color: rgb(207, 234, 255);
+QComboBox {
+	background-color: rgba(0,0,0,0);
 	color: rgb(50, 50, 50);
-}
-
-QPushButton:pressed {
-	background-color: rgb(173, 215, 239);
-}
-
-QPushButton:disabled {
 	color: rgb(150, 150, 150);
-	background-color: rgb(222, 237, 246);
-	cursor: Arrow;
-}</string>
+	border-color: rgba(0, 0, 0, 0);
+	background-color: rgb(207, 234, 255);
+}
+
+QComboBox::drop-down {
+	subcontrol-origin: padding;
+	subcontrol-position: top right;
+	width: 15px;
+	
+	border-left-width: 1px;
+	border-left-color: darkgray;
+	border-left-style: solid; /* just a single line */
+	border-top-right-radius: 25px; /* same radius as the QComboBox */
+	border-bottom-right-radius: 25px;
+}
+
+/*QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+
+    border-left-width: 1px;
+    border-left-color: darkgray;
+    border-left-style: solid;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+*/
+QComboBox::down-arrow {
+
+}
+/*
+QComboBox::down-arrow:on {
+    top: 1px;
+    left: 1px;
+}
+*/</string>
      </property>
-     <property name="text">
-      <string>آپلود تصویر پروفایل</string>
+     <property name="currentIndex">
+      <number>0</number>
      </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="modelColumn">
+      <number>0</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>مدت عضویت</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>یک ماه</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>دو ماه</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>سه ماه</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>چهار ماه</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>شش ماه</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>یک سال</string>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>دو سال</string>
+      </property>
+     </item>
     </widget>
    </widget>
    <widget class="QFrame" name="frame_comp_2">
@@ -2391,6 +2458,11 @@ QComboBox::down-arrow:on {
        <string>یک سال</string>
       </property>
      </item>
+     <item>
+      <property name="text">
+       <string>دو سال</string>
+      </property>
+     </item>
     </widget>
     <widget class="QPushButton" name="btn_renewSub_submit">
      <property name="geometry">
@@ -2461,7 +2533,7 @@ color: rgb(75, 75, 75);</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_renewSub_user_name">
+    <widget class="QLabel" name="lbl_renewSub_name">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -2491,7 +2563,7 @@ background-color: rgb(207, 242, 224);</string>
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_renewSub_user_id">
+    <widget class="QLabel" name="lbl_renewSub_user_code">
      <property name="geometry">
       <rect>
        <x>10</x>

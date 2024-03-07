@@ -118,7 +118,7 @@ class Sql():
         condition_opr = the comparison-oprators for condition ("=",">",...)\n
         condition_value = the value for condition\n
         '''
-        self.cur.execute(f'UPDATE {table_name} set {column}="{new_value}" WHERE {condition_column}{condition_opr}{condition_value}')
+        self.cur.execute(f'UPDATE {table_name} set {column}="{new_value}" WHERE {condition_column}{condition_opr}"{condition_value}"')
         self.con.commit()
 
     # def _check(self, l, table_name, cond_columns, cond_values, cond_oprs, cond):
