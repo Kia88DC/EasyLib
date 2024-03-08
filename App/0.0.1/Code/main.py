@@ -1042,10 +1042,17 @@ class Transactions_Screen(QDialog):
         _book_code = self._selected_book_code
         _lendDate = self.input_lend_date.text()
 
-        _u = self.mainwindow.database.cur.execute(f"SELECT 'User'.'id' from User WHERE 'User'.'user_code'='{_user_code}';").fetchone()[0]
+        _u, state_hasBorrowed = self.mainwindow.database.cur.execute(f"SELECT User.id, User.state_hasBorrowed from User WHERE User.user_code='{_user_code}';").fetchone()
         _user_id = f"{_u:03}"
-        _b = self.mainwindow.database.cur.execute(f"SELECT 'Book'.'id' from Book WHERE 'Book'.'book_code'='{_book_code}';").fetchone()[0]
+        _b, state_borrowed = self.mainwindow.database.cur.execute(f"SELECT Book.id, Book.state_borrowed from Book WHERE Book.book_code='{_book_code}';").fetchone()
         _book_id = f"{_b:03}"
+
+        if state_hasBorrowed == 1:
+            showMessageBox("خطا!", "کاربر توانایی امانت گرفتن کتاب را ندارد. هنوز کتاب هایی را باز نگردانده!", icon="Warning")
+            return None
+        if state_borrowed == 1:
+            showMessageBox("خطا!", "کتاب انتخاب شده قبلا توسط کسی امانت گرفته شده.", icon="Warning")
+            return None
 
         _transaction_code = self._codeCreate(_user_id, _book_id)
 
@@ -1064,8 +1071,18 @@ class Transactions_Screen(QDialog):
                 "transaction_code,user_id,book_id,state_done,borrowDate", 
                 (str(_transaction_code), str(int(_user_id)), str(int(_book_id)), 0, _lendDate)
             )
+            _bC = int(self.mainwindow.database.cur.execute(f"SELECT User.currBorrowedCount from User WHERE User.user_code='{_user_code}';").fetchone()[0])
+            self.mainwindow.database.Update("'User'", "state_hasBorrowed", 1, "user_code", "=", _user_code)
+            self.mainwindow.database.Update("'User'", "currBorrowedCount", _bC+1, "user_code", "=", _user_code)
+            _bC = int(self.mainwindow.database.cur.execute(f"SELECT Book.borrowedCount from Book WHERE Book.book_code='{_book_code}';").fetchone()[0])
+            self.mainwindow.database.Update("'Book'", "state_borrowed", 1, "book_code", "=", _book_code)
+            self.mainwindow.database.Update("'Book'", "borrowedCount", _bC+1, "book_code", "=", _book_code)
+
+            
             showMessageBox("موفقیت", "مبادله(امانت دادن) کتاب با موفقیت انجام شد.")
             self.mainwindow.database._ExpireCache(hard=True)
+            self._deselectUser()
+            self._deselectBook()
             self._clear(infoBox=True, delBox=True, renewBox=True, addBox=True)
             self._clearRows(self.tableWidget_search_results)
         except sqlite3.IntegrityError:
@@ -1075,6 +1092,12 @@ class Transactions_Screen(QDialog):
     def Retrieve(self):
         _retrieveDate = self.input_retrieve_date.text()
         _transaction_code = self.lbl_retrieve_transaction_code.text()
+
+        ـstate_done, _user_id, _book_id = self.mainwindow.database.cur.execute(f"SELECT 'Transaction'.state_done, 'Transaction'.user_id, 'Transaction'.book_id  from 'Transaction' WHERE 'Transaction'.transaction_code='{_transaction_code}';").fetchone()
+
+        if ـstate_done == 1:
+            showMessageBox("خطا!", "کتاب قبلا تحویل گرفته شده.", icon="Warning")
+            return None
 
         if not self.__item_is_selected:
             showMessageBox("خطا!", "لطفا ابتدا یک مبادله را انتخاب کنید.", icon="Critical")
@@ -1090,6 +1113,9 @@ class Transactions_Screen(QDialog):
         if self.ChBox_retrieve_automatic_date.isChecked():
            _retrieveDate = time.strftime(f"%Y-%m-%d")
 
+        self.mainwindow.database.Update("'User'", "state_hasBorrowed", 0, "id", "=", _user_id)
+        self.mainwindow.database.Update("'Book'", "state_borrowed", 1, "id", "=", _book_id)
+
         self.mainwindow.database.Update("'Transaction'", "retrieveDate", _retrieveDate, "transaction_code", "=", _transaction_code)
         self.mainwindow.database.Update("'Transaction'", "state_done", 1, "transaction_code", "=", _transaction_code)
         showMessageBox("موفقیت", "دریافت کتاب مورد نظر با موفقیت ثبت شد.")
@@ -1097,14 +1123,20 @@ class Transactions_Screen(QDialog):
         self._clearRows(self.tableWidget_search_results)
 
     def RenewBook(self):
+        _bookRenewAmount = self.input_bookRenew_amount.currentText()
+        _transaction_code = self.lbl_bookRenew_transaction_code.text()
+        
+        ـstate_done = self.mainwindow.database.cur.execute(f"SELECT 'Transaction'.state_done from 'Transaction' WHERE 'Transaction'.transaction_code='{_transaction_code}';").fetchone()[0]
+
+        if ـstate_done == 1:
+            showMessageBox("خطا!", "کتاب قبلا تحویل گرفته شده.", icon="Warning")
+            return None
         if self.input_bookRenew_amount.currentIndex() == 0:
             showMessageBox("خطا!", "لطفا ابتدا مدت تمدید را انتخاب کنید.", icon="Critical")
             return None
         if self._selected_transaction_state_done == True:
             showMessageBox("خطا!", "مبادله ی انتخاب شده تحویل گرفته شده.", icon="Critical")
             return None
-        _bookRenewAmount = self.input_bookRenew_amount.currentText()
-        _transaction_code = self.lbl_bookRenew_transaction_code.text()
 
         _renewCount = self.mainwindow.database.cached_sql_show("Transaction", all=False, column="renewCount", condition_columns=["transaction_code"], condition_values=[_transaction_code],  condition_oprs=["="])[1][0]
         _renewCount = int(_renewCount) + int(self.renewAmount_Directives[_bookRenewAmount])
