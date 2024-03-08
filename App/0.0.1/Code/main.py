@@ -864,6 +864,14 @@ class Transactions_Screen(QDialog):
             else:
                 _search_category = self.SearchCategories[self.inp_search_category.currentText()]
         _search_text = self.inp_search_box.text()
+
+
+        if _search_category == "state_done":
+            print("state_done")
+            if _search_text == "انجام شده":
+                _search_text = 1
+            elif _search_text == "منتظر تحویل":
+                _search_text = 0
         
         _results = self.mainwindow.database.cur.execute(
             f"""
@@ -875,7 +883,7 @@ class Transactions_Screen(QDialog):
                 User.id = 'Transaction'.user_id 
             INNER JOIN Book ON 
                 Book.id = 'Transaction'.book_id 
-            WHERE '{_search_category}' LIKE '%{_search_text}%';
+            WHERE {_search_category} LIKE '%{_search_text}%';
             """
         ).fetchall()
         if _results == None or _results == []:
