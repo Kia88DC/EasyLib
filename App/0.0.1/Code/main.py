@@ -367,11 +367,18 @@ class Books_Screen(QDialog):
 
         for column in self.info_widgets["info"].keys():
             _col_index = self.mainwindow._all_DB_Tables["Book"]["columns"].index(column)
-            self.info_widgets["info"][column].setText(str(_book[_col_index]))
+            _text = str(_book[_col_index])
+            if column == "state_borrowed":
+                if _text == "0":
+                    _text = "موجود"
+                elif _text == "1":
+                    _text = "نا موجود"
+            self.info_widgets["info"][column].setText(_text)
         
         for column in self.info_widgets["delBook"].keys():
             _col_index = self.mainwindow._all_DB_Tables["Book"]["columns"].index(column)
-            self.info_widgets["delBook"][column].setText(str(_book[_col_index]))
+            _text = str(_book[_col_index])
+            self.info_widgets["delBook"][column].setText(_text)
 
     def _codeCreate(self, _category):
         _id = f'{self.mainwindow.database.cur.execute("SELECT MAX(id) from Book;").fetchone()[0]:03}'
@@ -606,15 +613,28 @@ class Users_Screen(QDialog):
 
         for column in self.info_widgets["info"].keys():
             _col_index = self.mainwindow._all_DB_Tables["User"]["columns"].index(column)
-            self.info_widgets["info"][column].setText(str(_user[_col_index]))
+            _text = str(_user[_col_index])
+            if column == "state_hasBorrowed":
+                if _text == "0":
+                    _text = "گرفته نشده"
+                elif _text == "1":
+                    _text = "گرفته شده"
+            elif column == "state_subscribed":
+                if _text == "0":
+                    _text = "عضو نیست"
+                elif _text == "1":
+                    _text = "عضو است"
+            self.info_widgets["info"][column].setText(_text)
         
         for column in self.info_widgets["delUser"].keys():
             _col_index = self.mainwindow._all_DB_Tables["User"]["columns"].index(column)
-            self.info_widgets["delUser"][column].setText(str(_user[_col_index]))
+            _text = str(_user[_col_index])
+            self.info_widgets["delUser"][column].setText(_text)
 
         for column in self.info_widgets["renewSub"].keys():
             _col_index = self.mainwindow._all_DB_Tables["User"]["columns"].index(column)
-            self.info_widgets["renewSub"][column].setText(str(_user[_col_index]))
+            _text = str(_user[_col_index])
+            self.info_widgets["renewSub"][column].setText(_text)
 
     def _codeCreate(self):
         _id = f'{self.mainwindow.database.cur.execute("SELECT MAX(id) from User;").fetchone()[0]:03}'
