@@ -54,7 +54,6 @@ class Sql():
         v_num = number of values e.g: '?,?,?,...'\n
         values = the values(1,...) e.g: (123,32,)
         '''
-        _ = []
         self.cur.execute(f"INSERT INTO {table_name} ({columns}) VALUES ({v_num})",values)
         self.con.commit()
     
@@ -74,12 +73,12 @@ class Sql():
             raise ValueError(f"No tables in database whith this name: '{table_name}'")
         return_value = []
         if all == True:
-            exe = f'SELECT * FROM {table_name}'
+            exe = f"SELECT * FROM '{table_name}'"
             return_value.append(self.data[table_name]["cols"])
         else:
             try :
                 column = kwargs["column"]
-                exe = f'SELECT {column} FROM {table_name}'
+                exe = f"SELECT {column} FROM '{table_name}'"
                 _cols = self.data[table_name]["cols"]
                 return_value.append(_cols[_cols.index(kwargs["column"])])
             except KeyError:

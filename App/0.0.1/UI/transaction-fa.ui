@@ -722,6 +722,18 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     <row/>
     <column>
      <property name="text">
+      <string>شناسه مبادله</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
       <string>نام عضو</string>
      </property>
      <property name="font">
@@ -746,7 +758,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
     </column>
     <column>
      <property name="text">
-      <string>شناسه مبادله</string>
+      <string>وضعیت</string>
      </property>
      <property name="font">
       <font>
@@ -780,19 +792,7 @@ QScrollBar::add-page:horizontal, QScrollBar::sub-page:horizontal {
       </font>
      </property>
     </column>
-    <column>
-     <property name="text">
-      <string>(تمدید(روز</string>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-    </column>
-    <item row="0" column="0">
+    <item row="0" column="1">
      <property name="text">
       <string/>
      </property>
@@ -921,7 +921,7 @@ background-color: rgb(255, 251, 230);</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="lbl_bookRenew_transactionID">
+    <widget class="QLabel" name="lbl_bookRenew_transaction_code">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -954,9 +954,9 @@ background-color: rgb(255, 240, 200);</string>
     <widget class="QPushButton" name="btn_bookRenew_submit">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>60</x>
        <y>130</y>
-       <width>50</width>
+       <width>100</width>
        <height>30</height>
       </rect>
      </property>
@@ -1021,51 +1021,7 @@ color: rgb(50, 50, 50);</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
-    <widget class="QPushButton" name="btn_bookRenew_select_transaction">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>130</y>
-       <width>120</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">/*
-border-width:1px;
-border-style:solid;
-border-radius: 12px;
-border-color: rgba(244, 244, 244, 0);
-background-color: rgb(225, 225, 225);
-color: rgb(50, 50, 50);
-*/
-
-QPushButton {
-	border-width:1px;
-	border-style:solid;
-	border-radius: 10px;
-	border-color: rgba(244, 244, 244, 0);
-	background-color: rgb(255, 240, 200);
-	color: rgb(50, 50, 50);
-}
-
-QPushButton:pressed {
-	background-color: rgb(173, 215, 239);
-	
-	background-color: rgb(246, 224, 150);
-}</string>
-     </property>
-     <property name="text">
-      <string>انتخاب مبادله</string>
-     </property>
-    </widget>
-    <widget class="QComboBox" name="input_bookRenew_renewTime">
+    <widget class="QComboBox" name="ComboBox_bookRenew_renewTime">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -1211,9 +1167,9 @@ color: rgb(50, 50, 50);</string>
     <widget class="QPushButton" name="btn_retrieve_submit">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>60</x>
        <y>130</y>
-       <width>50</width>
+       <width>100</width>
        <height>30</height>
       </rect>
      </property>
@@ -1251,7 +1207,7 @@ QPushButton:pressed {
       <string>تایید</string>
      </property>
     </widget>
-    <widget class="QLabel" name="lbl_retrieve_user_name">
+    <widget class="QLabel" name="lbl_retrieve_transaction_code">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -1275,52 +1231,10 @@ border-color: rgba(0, 0, 0, 0);
 background-color: rgb(207, 242, 224);</string>
      </property>
      <property name="text">
-      <string>نام عضو متقاضی</string>
+      <string>شناسه مبادله</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="btn_retrieve_selectUser">
-     <property name="geometry">
-      <rect>
-       <x>90</x>
-       <y>130</y>
-       <width>120</width>
-       <height>30</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">/*
-border-width:1px;
-border-style:solid;
-border-radius: 12px;
-border-color: rgba(244, 244, 244, 0);
-background-color: rgb(225, 225, 225);
-color: rgb(50, 50, 50);
-*/
-
-QPushButton {
-	border-width:1px;
-	border-style:solid;
-	border-radius: 10px;
-	border-color: rgba(244, 244, 244, 0);
-	background-color: rgb(207, 242, 224);
-	color: rgb(50, 50, 50);
-}
-
-QPushButton:pressed {
-	background-color: rgb(185, 233, 184);
-}</string>
-     </property>
-     <property name="text">
-      <string>انتخاب متقاضی</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="input_retrieve_date">
@@ -1342,7 +1256,7 @@ QPushButton:pressed {
       <bool>false</bool>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(150, 150, 150);
+      <string notr="true">color: rgb(75, 75, 75);
 border-color: rgba(0, 0, 0, 0);
 background-color: rgb(207, 242, 224);</string>
      </property>
@@ -1496,8 +1410,8 @@ QPushButton:pressed {
     <widget class="QPushButton" name="btn_lend_selectUser">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>130</y>
+       <x>70</x>
+       <y>50</y>
        <width>120</width>
        <height>30</height>
       </rect>
@@ -1538,9 +1452,9 @@ QPushButton:pressed {
     <widget class="QLineEdit" name="input_lend_date">
      <property name="geometry">
       <rect>
-       <x>70</x>
-       <y>90</y>
-       <width>140</width>
+       <x>120</x>
+       <y>130</y>
+       <width>90</width>
        <height>30</height>
       </rect>
      </property>
@@ -1589,8 +1503,8 @@ background-color: rgb(207, 234, 255);</string>
     <widget class="QCheckBox" name="ChBox_lend_today">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>90</y>
+       <x>70</x>
+       <y>130</y>
        <width>50</width>
        <height>30</height>
       </rect>
@@ -1614,9 +1528,9 @@ background-color: rgb(207, 234, 255);</string>
     <widget class="QLabel" name="lbl_lend_user_name">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>50</x>
        <y>50</y>
-       <width>200</width>
+       <width>160</width>
        <height>30</height>
       </rect>
      </property>
@@ -1640,6 +1554,171 @@ background-color: rgb(207, 234, 255);</string>
       <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
     </widget>
+    <widget class="QLabel" name="lbl_lend_book_name">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>90</y>
+       <width>160</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>15</pointsize>
+      </font>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(150, 150, 150);
+border-color: rgba(244, 244, 244, 0);
+background-color: rgb(207, 234, 255);</string>
+     </property>
+     <property name="text">
+      <string>نام کتاب درخواستی</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_lend_selectBook">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>90</y>
+       <width>120</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">/*
+border-width:1px;
+border-style:solid;
+border-radius: 12px;
+border-color: rgba(244, 244, 244, 0);
+background-color: rgb(225, 225, 225);
+color: rgb(50, 50, 50);
+*/
+
+QPushButton {
+	border-width:1px;
+	border-style:solid;
+	border-radius: 10px;
+	border-color: rgba(244, 244, 244, 0);
+	background-color: rgb(207, 234, 255);
+	color: rgb(50, 50, 50);
+}
+
+QPushButton:pressed {
+	background-color: rgb(173, 215, 239);
+}</string>
+     </property>
+     <property name="text">
+      <string>انتخاب کتاب</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_lend_deselectUser">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">/*
+border-width:1px;
+border-style:solid;
+border-radius: 12px;
+border-color: rgba(244, 244, 244, 0);
+background-color: rgb(225, 225, 225);
+color: rgb(50, 50, 50);
+*/
+
+QPushButton {
+	border-width:1px;
+	border-style:solid;
+	border-radius: 12px;
+	border-color: rgba(244, 244, 244, 0);
+	background-color: rgb(207, 234, 255);
+	color: rgb(50, 50, 50);
+}
+
+QPushButton:pressed {
+	background-color: rgb(173, 215, 239);
+}</string>
+     </property>
+     <property name="text">
+      <string>×</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="btn_lend_deselectBook">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>30</width>
+       <height>30</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::NoFocus</enum>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">/*
+border-width:1px;
+border-style:solid;
+border-radius: 12px;
+border-color: rgba(244, 244, 244, 0);
+background-color: rgb(225, 225, 225);
+color: rgb(50, 50, 50);
+*/
+
+QPushButton {
+	border-width:1px;
+	border-style:solid;
+	border-radius: 12px;
+	border-color: rgba(244, 244, 244, 0);
+	background-color: rgb(207, 234, 255);
+	color: rgb(50, 50, 50);
+}
+
+QPushButton:pressed {
+	background-color: rgb(173, 215, 239);
+}</string>
+     </property>
+     <property name="text">
+      <string>×</string>
+     </property>
+    </widget>
+    <zorder>lbl_comp_1_title</zorder>
+    <zorder>btn_lend_submit</zorder>
+    <zorder>input_lend_date</zorder>
+    <zorder>ChBox_lend_today</zorder>
+    <zorder>lbl_lend_user_name</zorder>
+    <zorder>lbl_lend_book_name</zorder>
+    <zorder>btn_lend_selectBook</zorder>
+    <zorder>btn_lend_selectUser</zorder>
+    <zorder>btn_lend_deselectUser</zorder>
+    <zorder>btn_lend_deselectBook</zorder>
    </widget>
   </widget>
   <widget class="QFrame" name="frame_search">
@@ -1748,7 +1827,7 @@ QComboBox::drop-down {
     </item>
     <item>
      <property name="text">
-      <string>شناسه مبادله</string>
+      <string>وضعیت</string>
      </property>
     </item>
     <item>
@@ -1763,7 +1842,7 @@ QComboBox::drop-down {
     </item>
     <item>
      <property name="text">
-      <string>مدت تمدید</string>
+      <string>شناسه مبادله</string>
      </property>
     </item>
    </widget>
@@ -2039,7 +2118,7 @@ QPushButton:pressed {
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="lbl_transaction_id">
+   <widget class="QLabel" name="lbl_transaction_code">
     <property name="geometry">
      <rect>
       <x>470</x>
