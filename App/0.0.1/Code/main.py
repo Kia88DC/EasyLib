@@ -20,18 +20,24 @@ import Resources
 import os
 import sys
 import SimpleSql
-import dogpile.cache
 
-# current_path = str(os.path.abspath(__file__)).strip("main.py")
-current_path = "App/0.0.1"
 
-CacheRegion = dogpile.cache.make_region().configure(
-    'dogpile.cache.dbm',  # Using a file-based backend for persistence
-    expiration_time = 86400,  # Cache items expire after 1 day
-    arguments = {
-        'filename': f'{current_path}/temp/EasyLib_Cache.dbm'
-    }
-)
+current_path = "/" + str(os.path.abspath(__file__)).strip("/Code/main.py")
+print(current_path)
+# current_path = "App/0.0.1"
+
+if os.name == "posix":
+    import dogpile.cache
+    CacheRegion = dogpile.cache.make_region().configure(
+        'dogpile.cache.dbm',  # Using a file-based backend for persistence
+        expiration_time = 86400,  # Cache items expire after 1 day
+        arguments = {
+            'filename': f'{current_path}/temp/EasyLib_Cache.dbm'
+        }
+    )
+if os.name == "nt":
+    import diskcache
+    CacheRegion = diskcache.Cache(f'{current_path}/temp')
 
 
 # def Caching_Key_Generator(args, prefix:str="", sep:str="|"):
@@ -54,23 +60,50 @@ def Caching_Key_Generator(mainArgs, args, kwargs, prefix:str="", sep:str="|"):
 
     return key
 
-def cache_on_kwargs(func, namespace="", sep="|", key_generator=Caching_Key_Generator):
-    nargs = func.__code__.co_argcount
-    def wrapper(*args, **kwargs):
-        _ = 0
-        if func.__code__.co_varnames[0] in ("self", "cls"): _ = 1
-        key = key_generator(args[_:nargs], args[nargs:], kwargs, namespace, sep)
-        _cache_value = CacheRegion.get(key)
+# on Unix Based
+if os.name == "posix":
+    def cache_on_kwargs(func, namespace="", sep="|", key_generator=Caching_Key_Generator):
+        nargs = func.__code__.co_argcount
+        def wrapper(*args, **kwargs):
+            _ = 0
+            if func.__code__.co_varnames[0] in ("self", "cls"): _ = 1
+            key = key_generator(args[_:nargs], args[nargs:], kwargs, namespace, sep)
+            _cache_value = CacheRegion.get(key)
 
-        if _cache_value == dogpile.cache.api.NO_VALUE:
-            result = func(*args, **kwargs)
-            CacheRegion.set(key, result)
-            return result
-        
-        else:
-            return _cache_value
+            if _cache_value == dogpile.cache.api.NO_VALUE:
+                result = func(*args, **kwargs)
+                CacheRegion.set(key, result)
+                return result
+            
+            else:
+                return _cache_value
 
-    return wrapper
+        return wrapper
+
+# on Windows
+if os.name == "nt":
+    def cache_on_kwargs(func, namespace="", sep="|", key_generator=Caching_Key_Generator):
+        nargs = func.__code__.co_argcount
+        def wrapper(*args, **kwargs):
+            _ = 0
+            if func.__code__.co_varnames[0] in ("self", "cls"): _ = 1
+            key = key_generator(args[_:nargs], args[nargs:], kwargs, namespace, sep)
+            # _cache_value = CacheRegion.get(key)
+
+            # if _cache_value == dogpile.cache.api.NO_VALUE:
+            if key in CacheRegion:
+                result = CacheRegion[key]
+                return result
+            
+            else:
+                # _result = CacheRegion.set(key, result)
+                _result = func(*args, **kwargs)
+                CacheRegion[key] = _result
+                return _result
+
+        return wrapper
+
+
 
 class Datebase(SimpleSql.Sql):
     def __init__(self, db_name: str, all_db) -> None:
@@ -82,8 +115,14 @@ class Datebase(SimpleSql.Sql):
         for _db in self.All_DBs["All"]:
             self.sql_table(_db, self.All_DBs[_db]["table"])
 
-    def _ExpireCache(self, hard=True):
-        CacheRegion.invalidate(hard=hard)
+    # on Unix
+    if os.name == "posix":
+        def _ExpireCache(self, hard=True):
+            CacheRegion.invalidate(hard=hard)
+    # on Windows
+    if os.name == "nt":
+        def _ExpireCache(self, hard=True):
+            CacheRegion.clear()
     
     @cache_on_kwargs
     def cached_sql_show(self, table_name: str, all=True, **_kwargs):
@@ -115,8 +154,8 @@ class Datebase(SimpleSql.Sql):
 class MainWindow(QMainWindow, QDialog):
     def __init__(self):
         super(MainWindow, self).__init__()
-        # loadUi(f"{current_path}../UI/home-fa.ui", self)
         loadUi(f"{current_path}/UI/home-fa.ui", self)
+        # loadUi(f"{current_path}/home-fa.ui", self)
         
         # Start Local DataBase Connection
         self._all_DB_Tables = {
@@ -146,6 +185,7 @@ class MainWindow(QMainWindow, QDialog):
                 "columns": ["id", "transaction_code", "user_id", "book_id", "state_done", "borrowDate", "retrieveDate", "renewCount", "created_at"]
             }
         }
+        # self.database = Datebase(f"{current_path}/main.db", self._all_DB_Tables)
         self.database = Datebase(f"{current_path}/DB/main.db", self._all_DB_Tables)
 
         # define var
@@ -176,6 +216,8 @@ class MainWindow(QMainWindow, QDialog):
 
         # Pre Start
         _libBookCount, _libUserCount = self.database.cur.execute("SELECT  (SELECT COUNT(*) FROM Book) As bookCount, (SELECT COUNT(*) FROM User) as userCount;").fetchone()
+        _r = self.database.cur.execute("SELECT  Name, Librarian, created_at FROM Library;").fetchone()
+        print(_r)
         _libName, _libLibrarian, _libCreated_at = self.database.cur.execute("SELECT  Name, Librarian, created_at FROM Library;").fetchone()
         self.database.Delete("Library", "id", "1", "=")
         self.database.Add("Library", ["Name", "Librarian", "bookCount", "userCount", "created_at"], (_libName, _libLibrarian, _libBookCount, _libUserCount, _libCreated_at))
@@ -211,8 +253,8 @@ class Books_Screen(QDialog):
         # set main
         self.mainwindow = mainwindow
         # load ui
-        # loadUi(f"{current_path}../UI/book-fa.ui", self)
         loadUi(f"{current_path}/UI/book-fa.ui", self)
+        # loadUi(f"{current_path}/book-fa.ui", self)
 
         # define var
         self.SearchCategories = {
@@ -449,8 +491,8 @@ class Users_Screen(QDialog):
         # set main
         self.mainwindow = mainwindow
         # load ui
-        # loadUi(f"{current_path}../UI/user-fa.ui", self)
         loadUi(f"{current_path}/UI/user-fa.ui", self)
+        # loadUi(f"{current_path}/user-fa.ui", self)
 
         # define var
         self.SearchCategories = {
@@ -743,8 +785,8 @@ class Transactions_Screen(QDialog):
         # set main
         self.mainwindow = mainwindow
         # load ui
-        # loadUi(f"{current_path}../UI/transaction-fa.ui", self)
         loadUi(f"{current_path}/UI/transaction-fa.ui", self)
+        # loadUi(f"{current_path}/transaction-fa.ui", self)
 
         # define var
         self.SearchCategories = {

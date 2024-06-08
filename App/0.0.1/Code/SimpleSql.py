@@ -19,6 +19,7 @@ class Sql():
         self._load()
 
     def __load_tb(self, table):
+            """"""
             self.tables.append(table[0])
             self.data[table[0]] = {}
             self.data[table[0]]["cols"] = []
@@ -28,6 +29,7 @@ class Sql():
                 self.data[table[0]]["cols"].append(column[0])
     
     def _load(self, _tables=False):
+        """Finds all tables in a database"""
         exe = f'SELECT name from sqlite_master where type="table"'
         self.cur.execute(exe)
         tables = self.cur.fetchall()
@@ -43,9 +45,9 @@ class Sql():
         table_name = the name of the table \n
         columns = the columns(NAME TYPE,...) e.g: 'id iteger PRIMARY KEY,name text,...'
         '''
-        self.__load_tb((table_name,))
         self.cur.execute(f"CREATE TABLE IF NOT EXISTS '{table_name}' ({columns})")
         self.con.commit()
+        self.__load_tb((table_name,))
 
     def sql_insert(self, table_name:str, columns:str, v_num:str, values:tuple) -> None:
         '''
