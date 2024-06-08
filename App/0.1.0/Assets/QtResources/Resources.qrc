@@ -1,0 +1,15 @@
+<RCC>
+  <qresource prefix="AppLogo">
+    <file>Assets/Logo.png</file>
+  </qresource>
+  <qresource prefix="AppIcon">
+    <file>Assets/Icon.png</file>
+  </qresource>
+  <qresource prefix="Other">
+    <file>Assets/Other/search-40px.png</file>
+    <file>Assets/Other/habit-40.png</file>
+    <file>Assets/Other/Next.png</file>
+    <file>Assets/Other/events-40px.png</file>
+    <file>Assets/Other/note-40px.png</file>
+  </qresource>
+</RCC>
