@@ -203,7 +203,10 @@ class MainWindow(QMainWindow, QDialog):
         self.btn_menu_transaction = self.findChild(QtWidgets.QPushButton, "btn_menu_transactions")
         # Lib Info widgets
         self.lbl_lib_name = self.findChild(QtWidgets.QLabel, "lbl_lib_name")
-        #
+
+        self.btn_lib_acc = self.findChild(QtWidgets.QPushButton, "btn_lib_acc")
+        self.btn_info_moreinfo = self.findChild(QtWidgets.QPushButton, "btn_info_moreinfo")
+        
         self.lbl_info_LibName = self.findChild(QtWidgets.QLabel, "lbl_info_LibName")
         self.lbl_info_Librarian = self.findChild(QtWidgets.QLabel, "lbl_info_Librarian")
         self.lbl_info_BookCount = self.findChild(QtWidgets.QLabel, "lbl_info_BookCount")
@@ -220,6 +223,29 @@ class MainWindow(QMainWindow, QDialog):
         #
 
         # Pre Start
+        self._pre_start()
+
+        # set Signals/Slots
+        self.btn_menu_book.clicked.connect(lambda : Switch_Screen("book"))
+        self.btn_menu_user.clicked.connect(lambda : Switch_Screen("user"))
+        self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen("transaction"))
+        #
+        self.btn_lib_acc.clicked.connect(lambda : PopUp_Windows("LibSettings"))
+        self.btn_info_moreinfo.clicked.connect(lambda : PopUp_Windows("LibSettings"))        
+        #
+        self.btn_quick_accsess_1.clicked.connect(lambda : Switch_Screen("transaction"))
+        self.btn_quick_accsess_2.clicked.connect(lambda : Switch_Screen("transaction"))
+        self.btn_quick_accsess_5.clicked.connect(lambda : Switch_Screen("transaction"))
+
+        self.btn_quick_accsess_3.clicked.connect(lambda : Switch_Screen("book"))
+        self.btn_quick_accsess_7.clicked.connect(lambda : Switch_Screen("book"))
+        
+        self.btn_quick_accsess_4.clicked.connect(lambda : Switch_Screen("user"))
+        self.btn_quick_accsess_6.clicked.connect(lambda : Switch_Screen("user"))
+        self.btn_quick_accsess_8.clicked.connect(lambda : Switch_Screen("user"))
+        #
+    
+    def _pre_start(self):
         _libBookCount, _libUserCount = self.database.cur.execute("SELECT  (SELECT COUNT(*) FROM Book) As bookCount, (SELECT COUNT(*) FROM User) as userCount;").fetchone()
         _r = self.database.cur.execute("SELECT  Name, Librarian, created_at FROM Library;").fetchone()
         print(_r)
@@ -235,23 +261,6 @@ class MainWindow(QMainWindow, QDialog):
         self.lbl_info_Librarian.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("Librarian")]))
         self.lbl_info_BookCount.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("bookCount")]))
         self.lbl_info_UserCount.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("userCount")]))
-
-        # set Signals/Slots
-        self.btn_menu_book.clicked.connect(lambda : Switch_Screen(main_widgets, "book"))
-        self.btn_menu_user.clicked.connect(lambda : Switch_Screen(main_widgets, "user"))
-        self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen(main_widgets, "transaction"))
-        #
-        self.btn_quick_accsess_1.clicked.connect(lambda : Switch_Screen(main_widgets, "transaction"))
-        self.btn_quick_accsess_2.clicked.connect(lambda : Switch_Screen(main_widgets, "transaction"))
-        self.btn_quick_accsess_5.clicked.connect(lambda : Switch_Screen(main_widgets, "transaction"))
-
-        self.btn_quick_accsess_3.clicked.connect(lambda : Switch_Screen(main_widgets, "book"))
-        self.btn_quick_accsess_7.clicked.connect(lambda : Switch_Screen(main_widgets, "book"))
-        
-        self.btn_quick_accsess_4.clicked.connect(lambda : Switch_Screen(main_widgets, "user"))
-        self.btn_quick_accsess_6.clicked.connect(lambda : Switch_Screen(main_widgets, "user"))
-        self.btn_quick_accsess_8.clicked.connect(lambda : Switch_Screen(main_widgets, "user"))
-        #
 
 
 # Books Screen Class -> Book UI
@@ -286,6 +295,7 @@ class Books_Screen(QDialog):
         self.tableWidget_search_results = self.findChild(QtWidgets.QTableWidget, "tableWidget_search_results")
         #                     Lib Info widgets
         self.lbl_lib_name = self.findChild(QtWidgets.QLabel, "lbl_lib_name")
+        self.btn_lib_acc = self.findChild(QtWidgets.QPushButton, "btn_lib_acc")
         #                     info widgets
         self.info_widgets["info"] = {}
         self.inp_book_title = self.findChild(QtWidgets.QLineEdit, "input_book_title")
@@ -322,17 +332,14 @@ class Books_Screen(QDialog):
         #
 
         # Pre Start
-        self._clearRows(self.tableWidget_search_results)
-        #                     info
-        self.btn_book_save.hide()
-        self._clear()
-        # Lib Info
-        self.lbl_lib_name.setText(str(self.mainwindow.library[self.mainwindow._all_DB_Tables["Library"]["columns"].index("Name")]))
+        self._pre_start()
 
         # set Signals/Slots
-        self.btn_menu_home.clicked.connect(lambda : Switch_Screen(main_widgets, "home"))
-        self.btn_menu_user.clicked.connect(lambda : Switch_Screen(main_widgets, "user"))
-        self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen(main_widgets, "transaction"))
+        self.btn_menu_home.clicked.connect(lambda : Switch_Screen("home"))
+        self.btn_menu_user.clicked.connect(lambda : Switch_Screen("user"))
+        self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen("transaction"))
+        #
+        self.btn_lib_acc.clicked.connect(lambda : PopUp_Windows("LibSettings"))
         # Search action
         self.btn_search.clicked.connect(lambda : self.BookSearch())
         # Book Select
@@ -342,7 +349,14 @@ class Books_Screen(QDialog):
         # Book Del
         self.btn_delBook_submit.clicked.connect(lambda : self.DeleteBook())
         #
-    
+
+    def _pre_start(self):
+        self._clearRows(self.tableWidget_search_results)
+        # info
+        self.btn_book_save.hide()
+        self._clear()
+        # Lib Info
+        self.lbl_lib_name.setText(str(self.mainwindow.library[self.mainwindow._all_DB_Tables["Library"]["columns"].index("Name")]))
 
     def BookSearch(self, _search_category=None):
         self._clear()
@@ -417,7 +431,7 @@ class Books_Screen(QDialog):
             _user = self._selectBook()
             self.mainwindow._selected_book["Title"] = _user[self.mainwindow._all_DB_Tables["Book"]["columns"].index("Title")]
             self.mainwindow._selected_book["book_code"] = _user[self.mainwindow._all_DB_Tables["Book"]["columns"].index("book_code")]
-            Switch_Screen(main_widgets, "transaction")
+            Switch_Screen("transaction")
             screen_transaction._selectBook()
             return None
         
@@ -536,6 +550,7 @@ class Users_Screen(QDialog):
         self.tableWidget_search_results = self.findChild(QtWidgets.QTableWidget, "tableWidget_search_results")
         #                     Lib Info widgets
         self.lbl_lib_name = self.findChild(QtWidgets.QLabel, "lbl_lib_name")
+        self.btn_lib_acc = self.findChild(QtWidgets.QPushButton, "btn_lib_acc")
         #                     info widgets
         self.info_widgets["info"] = {}
         self.inp_user_name = self.findChild(QtWidgets.QLineEdit, "input_user_name")
@@ -578,17 +593,14 @@ class Users_Screen(QDialog):
         #
 
         # Pre Start
-        self._clearRows(self.tableWidget_search_results)
-        #                     info
-        self.btn_user_save.hide()
-        self._clear()
-        # Lib Info
-        self.lbl_lib_name.setText(str(self.mainwindow.library[self.mainwindow._all_DB_Tables["Library"]["columns"].index("Name")]))
+        self._pre_start()
 
         # set Signals/Slots
-        self.btn_menu_home.clicked.connect(lambda : Switch_Screen(main_widgets, "home"))
-        self.btn_menu_book.clicked.connect(lambda : Switch_Screen(main_widgets, "book"))
-        self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen(main_widgets, "transaction"))
+        self.btn_menu_home.clicked.connect(lambda : Switch_Screen("home"))
+        self.btn_menu_book.clicked.connect(lambda : Switch_Screen("book"))
+        self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen("transaction"))
+        #
+        self.btn_lib_acc.clicked.connect(lambda : PopUp_Windows("LibSettings"))
         # Search action
         self.btn_search.clicked.connect(lambda : self.UserSearch())
         # User Select
@@ -600,7 +612,14 @@ class Users_Screen(QDialog):
         # Renew Sub
         self.btn_renewSub_submit.clicked.connect(lambda : self.RenewSub())
         #
-    
+
+    def _pre_start(self):
+        self._clearRows(self.tableWidget_search_results)
+        # info
+        self.btn_user_save.hide()
+        self._clear()
+        # Lib Info
+        self.lbl_lib_name.setText(str(self.mainwindow.library[self.mainwindow._all_DB_Tables["Library"]["columns"].index("Name")]))
 
     def UserSearch(self, _search_category=None):
         self._clear()
@@ -676,7 +695,7 @@ class Users_Screen(QDialog):
             _user = self._selectUser()
             self.mainwindow._selected_user["Name"] = _user[self.mainwindow._all_DB_Tables["User"]["columns"].index("Name")]
             self.mainwindow._selected_user["user_code"] = _user[self.mainwindow._all_DB_Tables["User"]["columns"].index("user_code")]
-            Switch_Screen(main_widgets, "transaction")
+            Switch_Screen("transaction")
             screen_transaction._selectUser()
             return None
         
@@ -839,6 +858,7 @@ class Transactions_Screen(QDialog):
         self.tableWidget_search_results = self.findChild(QtWidgets.QTableWidget, "tableWidget_search_results")
         #                     Lib Info widgets
         self.lbl_lib_name = self.findChild(QtWidgets.QLabel, "lbl_lib_name")
+        self.btn_lib_acc = self.findChild(QtWidgets.QPushButton, "btn_lib_acc")
         #                     info widgets
         self.info_widgets["info"] = {}
         self.lbl_transaction_user_name = self.findChild(QtWidgets.QLabel, "lbl_transaction_user_name")
@@ -880,21 +900,14 @@ class Transactions_Screen(QDialog):
         #
 
         # Pre Start
-        self._clearRows(self.tableWidget_search_results)
-        #                     info
-        self.btn_transaction_save.hide()
-        self.lbl_lend_user_name.hide()
-        self.btn_lend_deseletUser.hide()
-        self.lbl_lend_book_name.hide()
-        self.btn_lend_deseletBook.hide()
-        self._clear()
-        # Lib Info
-        self.lbl_lib_name.setText(str(self.mainwindow.library[self.mainwindow._all_DB_Tables["Library"]["columns"].index("Name")]))
+        self._pre_start()
 
         # set Signals/Slots
-        self.btn_menu_home.clicked.connect(lambda : Switch_Screen(main_widgets, "home"))
-        self.btn_menu_book.clicked.connect(lambda : Switch_Screen(main_widgets, "book"))
-        self.btn_menu_user.clicked.connect(lambda : Switch_Screen(main_widgets, "user"))
+        self.btn_menu_home.clicked.connect(lambda : Switch_Screen("home"))
+        self.btn_menu_book.clicked.connect(lambda : Switch_Screen("book"))
+        self.btn_menu_user.clicked.connect(lambda : Switch_Screen("user"))
+        #
+        self.btn_lib_acc.clicked.connect(lambda : PopUp_Windows("LibSettings"))
         # Search action
         self.btn_search.clicked.connect(lambda : self.TransactionSearch())
         # Transaction Select
@@ -910,6 +923,18 @@ class Transactions_Screen(QDialog):
         # BookRenew
         self.btn_bookRenew_submit.clicked.connect(lambda : self.RenewBook())
         #
+
+    def _pre_start(self):
+        self._clearRows(self.tableWidget_search_results)
+        # info
+        self.btn_transaction_save.hide()
+        self.lbl_lend_user_name.hide()
+        self.btn_lend_deseletUser.hide()
+        self.lbl_lend_book_name.hide()
+        self.btn_lend_deseletBook.hide()
+        self._clear()
+        # Lib Info
+        self.lbl_lib_name.setText(str(self.mainwindow.library[self.mainwindow._all_DB_Tables["Library"]["columns"].index("Name")]))
 
     def TransactionSearch(self, _search_category=None):
         self._clear()
@@ -954,7 +979,7 @@ class Transactions_Screen(QDialog):
             return None
         self.ShowSearchResults(_results)
 
-    def _clear(self, infoBox=True, delBox=True, renewBox=True, addBox=False):
+    def _clear(self, infoBox=True, retrieveBox=True, renewBox=True, lendBox=False):
         if infoBox:
             self.lbl_transaction_code.setText("")
             self.lbl_transaction_user_name.setText("")
@@ -963,20 +988,19 @@ class Transactions_Screen(QDialog):
             self.lbl_transaction_lend_date.setText("")
             self.lbl_transaction_retrieve_date.setText("")
         
-        # if delBox:
-        #     self.__item_is_selected = False
-        #     self.lbl_delUser_name.clear()
-        #     self.lbl_delUser_user_code.clear()
-        #     self.lbl_delUser_number.clear()
+        if retrieveBox:
+            self.__item_is_selected = False
+            self.lbl_retrieve_transaction_code.clear()
+            self.lbl_transaction_retrieve_date.clear()
         
-        # if renewBox:
-        #     self.lbl_renewSub_name.clear()
-        #     self.lbl_renewSub_user_code.clear()
+        if renewBox:
+            self.lbl_bookRenew_transaction_code.clear()
+            self.input_bookRenew_amount.setCurrentIndex(0)
 
-        # if addBox:
-        #     self.input_userAdd_name.clear()
-        #     self.input_userAdd_user_code.clear()
-        #     self.input_userAdd_number.clear()
+        if lendBox:
+            self.lbl_lend_user_name.clear()
+            self.lbl_lend_book_name.clear()
+            self.lbl_transaction_lend_date.clear()
 
     def _clearRows(self, table:QtWidgets.QTableWidget):
         self.__clear_in_progress = True
@@ -1058,7 +1082,7 @@ class Transactions_Screen(QDialog):
     def _selectUser(self):
         if self.mainwindow._user_select_in_progress == False:
             self.mainwindow._user_select_in_progress = True
-            Switch_Screen(main_widgets, "user")
+            Switch_Screen("user")
         else:
             _rVal = self.mainwindow._selected_user
             self.btn_lend_selectUser.hide()
@@ -1080,7 +1104,7 @@ class Transactions_Screen(QDialog):
     def _selectBook(self):
         if self.mainwindow._book_select_in_progress == False:
             self.mainwindow._book_select_in_progress = True
-            Switch_Screen(main_widgets, "book")
+            Switch_Screen("book")
         else:
             _rVal = self.mainwindow._selected_book
             self.btn_lend_selectBook.hide()
@@ -1153,7 +1177,7 @@ class Transactions_Screen(QDialog):
             self.mainwindow.database._ExpireCache(hard=True)
             self._deselectUser()
             self._deselectBook()
-            self._clear(infoBox=True, delBox=True, renewBox=True, addBox=True)
+            self._clear(infoBox=True, retrieveBox=True, renewBox=True, lendBox=True)
             self._clearRows(self.tableWidget_search_results)
         except sqlite3.IntegrityError:
             if self.ChBox_automatic_code.isChecked():
@@ -1189,7 +1213,7 @@ class Transactions_Screen(QDialog):
         self.mainwindow.database.Update("'Transaction'", "retrieveDate", _retrieveDate, "transaction_code", "=", _transaction_code)
         self.mainwindow.database.Update("'Transaction'", "state_done", 1, "transaction_code", "=", _transaction_code)
         showMessageBox("موفقیت", "دریافت کتاب مورد نظر با موفقیت ثبت شد.")
-        self._clear(infoBox=True, delBox=True, renewBox=True)
+        self._clear(infoBox=True, retrieveBox=True, renewBox=True)
         self._clearRows(self.tableWidget_search_results)
 
     def RenewBook(self):
@@ -1215,6 +1239,76 @@ class Transactions_Screen(QDialog):
         showMessageBox("موفقیت", "مدت امانت مبادله مورد نظر با موفقیت تمدید شد.")
 
 
+class LibSettingsPage(QDialog):
+    def __init__(self, mainwindow):
+        super().__init__()
+        # set main
+        self.mainwindow = mainwindow
+        # load ui
+        loadUi(f"{current_path}/UI/LibSettingsDialog-fa.ui", self)
+        # loadUi(f"{current_path}/LibSettingsDialog-fa.ui", self)
+
+        # define var
+        self.changes = {
+            "input_LibName": False,
+            "input_Librarian": False
+        }
+
+        # define Widgets
+        # Page Button widgets
+        self.btn_save = self.findChild(QtWidgets.QPushButton, "btn_save")
+        self.btn_back = self.findChild(QtWidgets.QPushButton, "btn_back")
+        # Lib Info widgets
+        self.input_LibName = self.findChild(QtWidgets.QLineEdit, "input_LibName")
+        self.input_Librarian = self.findChild(QtWidgets.QLineEdit, "input_Librarian")
+        self.lbl_UserCount = self.findChild(QtWidgets.QLabel, "lbl_UserCount")
+        self.lbl_BookCount = self.findChild(QtWidgets.QLabel, "lbl_BookCount")
+
+        # Pre Start
+        self._pre_start()
+
+        # set Signals/Slots
+        self.btn_save.clicked.connect(lambda : self.Save())
+        self.btn_back.clicked.connect(lambda : self.Back())
+        #
+        self.input_LibName.textChanged.connect(lambda : self._change("input_LibName") if self.changes["input_LibName"] == False else None)
+        self.input_Librarian.textChanged.connect(lambda : self._change("input_Librarian") if self.changes["input_Librarian"] == False else None)
+
+    def _pre_start(self):
+        self.btn_save.hide()
+        #
+        self.input_LibName.setText(str(self.mainwindow.library[self.mainwindow._all_DB_Tables["Library"]["columns"].index("Name")]))
+        self.input_Librarian.setText(str(self.mainwindow.library[self.mainwindow._all_DB_Tables["Library"]["columns"].index("Librarian")]))
+        self.lbl_UserCount.setText(str(self.mainwindow.library[self.mainwindow._all_DB_Tables["Library"]["columns"].index("userCount")]))
+        self.lbl_BookCount.setText(str(self.mainwindow.library[self.mainwindow._all_DB_Tables["Library"]["columns"].index("bookCount")]))
+        #
+        self._unsaved_changes = False
+        self.changes = {
+            "input_LibName": False,
+            "input_Librarian": False
+        }
+
+    def _change(self, _input):
+        self.changes[_input] = True
+        self.btn_save.show()
+
+    def Save(self):
+        _id = self.mainwindow.database.cur.execute("SELECT id FROM Library;").fetchone()[0]
+        
+        if self.changes["input_LibName"]:
+            _new_value = self.input_LibName.text()
+            self.mainwindow.database.Update("Library", "Name", _new_value, "id", "=", _id)
+
+        if self.changes["input_Librarian"]:
+            _new_value = self.input_Librarian.text()
+            self.mainwindow.database.Update("Library", "Librarian", _new_value, "id", "=", _id)
+        
+        self.mainwindow._pre_start()
+        self.Back()
+        showMessageBox("موفقیت", "اطلاعات کتابخانه با موفقیت تغییر داده شد.")
+
+    def Back(self):
+        PopUp_Windows(pop=False)
 
 
 def showMessageBox(title, text, icon="NoIcon", buttons=False, buttonsText=[], callback=None):
@@ -1256,21 +1350,34 @@ def showMessageBox(title, text, icon="NoIcon", buttons=False, buttonsText=[], ca
     else:
         return None
 
-def Switch_Screen(widget:QtWidgets.QStackedWidget, target:str):
-    screens = {
+
+popup_screens = {
+        "LibSettings" : [0, "Library Settings"],
+    }
+def PopUp_Windows(target:str=None, pop=True):
+    if pop == True:
+        popup_widgets.setCurrentIndex(popup_screens[target][0])
+        popup_widgets.setWindowTitle(popup_screens[target][1])
+        popup_widgets.currentWidget()._pre_start()
+        popup_widgets.show()
+    else:
+        popup_widgets.hide()
+
+screens = {
         "home"        : 0,
         "book"        : 1,
         "user"        : 2,
         "transaction" : 3,
     }
-    widget.setCurrentIndex(screens[target])
+def Switch_Screen(target:str):
+    main_widgets.setCurrentIndex(screens[target])
 
 def app_exit():
     print("Exiting")
     screen_mainwindow.database.sql_close_connection()
 
 if __name__ == "__main__":
-    global screen_mainwindow, screen_book, screen_user, screen_transaction
+    global popup_widgets, screen_mainwindow, screen_book, screen_user, screen_transaction
     app = QApplication(sys.argv)
     main_widgets = QtWidgets.QStackedWidget()
     
@@ -1290,7 +1397,14 @@ if __name__ == "__main__":
     main_widgets.setWindowTitle("EasyLib - Library Management Application")
     main_widgets.show()
 
-    Switch_Screen(main_widgets, "home")
+    Switch_Screen("home")
+
+    popup_widgets = QtWidgets.QStackedWidget()
+    popup_widgets.setFixedWidth(640)
+    popup_widgets.setFixedHeight(480)
+    popup_LibSettings = LibSettingsPage(screen_mainwindow)
+    popup_widgets.addWidget(popup_LibSettings)
+    popup_widgets.hide()
 
     try:
         sys.exit(app.exec_())
