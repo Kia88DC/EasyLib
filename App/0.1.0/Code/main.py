@@ -223,7 +223,8 @@ class MainWindow(QMainWindow, QDialog):
         #
 
         # Pre Start
-        self._pre_start()
+        if self._IsNewApp() == False:
+            self._pre_start()
 
         # set Signals/Slots
         self.btn_menu_book.clicked.connect(lambda : Switch_Screen("book"))
@@ -262,10 +263,50 @@ class MainWindow(QMainWindow, QDialog):
         self.lbl_info_BookCount.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("bookCount")]))
         self.lbl_info_UserCount.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("userCount")]))
 
+    def _IsNewApp(self):
+        _libCount, = self.database.cur.execute("SELECT COUNT(*) FROM Library;").fetchone()
+        if _libCount == 0:
+            return True
+        elif _libCount > 0:
+            return False
+
+
+# Start Screen Class -> Start UI
+class Start_Screen(QDialog):
+    def __init__(self, mainwindow):
+        super().__init__()
+        # set main
+        self.mainwindow = mainwindow
+        # load ui
+        loadUi(f"{current_path}/UI/start-fa.ui", self)
+        # loadUi(f"{current_path}/start-fa.ui", self)
+
+        # define Widgets
+        self.input_LibName = self.findChild(QtWidgets.QLineEdit, "input_LibName")
+        self.input_Librarian = self.findChild(QtWidgets.QLineEdit, "input_Librarian")
+        self.btn_submit = self.findChild(QtWidgets.QPushButton, "btn_submit")
+
+        # set Signals/Slots
+        self.btn_submit.clicked.connect(lambda : self.CreateLib())
+    
+    def CreateLib(self):
+        _LibName = self.input_LibName.text()
+        _Librarian = self.input_Librarian.text()
+        if _LibName == "" or _Librarian == "":
+            showMessageBox("خطا!", "لطفا ابتدا اطلاعات کتابخانه را وارد کنید.", icon="Critical")
+            return None
+        
+        self.mainwindow.database.Add("Library", "Name,Librarian", (str(_LibName), str(_Librarian)))
+        
+        for _screen in all_screens[1:]:
+            _screen._pre_start()
+
+        Switch_Screen("home")
+
 
 # Books Screen Class -> Book UI
 class Books_Screen(QDialog):
-    def __init__(self, mainwindow):
+    def __init__(self, mainwindow, _IsNewApp=False):
         super().__init__()
         # set main
         self.mainwindow = mainwindow
@@ -332,7 +373,8 @@ class Books_Screen(QDialog):
         #
 
         # Pre Start
-        self._pre_start()
+        if _IsNewApp == False:
+            self._pre_start()
 
         # set Signals/Slots
         self.btn_menu_home.clicked.connect(lambda : Switch_Screen("home"))
@@ -475,7 +517,6 @@ class Books_Screen(QDialog):
         _author = self.input_bookAdd_author.text()
         _category = self.input_bookAdd_category.currentText()
         _book_code = self.input_bookAdd_book_code.text()
-        # if i[0] == False or i[1] == False and i[2] == False:
         if _title == "" or _book_code == "" and not self.ChBox_automatic_code.isChecked():
             showMessageBox("خطا!", "لطفا ابتدا اطلاعات کتاب را وارد کنید.", icon="Critical")
             return None
@@ -512,7 +553,7 @@ class Books_Screen(QDialog):
 
 # Users Screen Class -> User UI
 class Users_Screen(QDialog):
-    def __init__(self, mainwindow):
+    def __init__(self, mainwindow, _IsNewApp=False):
         super().__init__()
         # set main
         self.mainwindow = mainwindow
@@ -593,7 +634,8 @@ class Users_Screen(QDialog):
         #
 
         # Pre Start
-        self._pre_start()
+        if _IsNewApp == False:
+            self._pre_start()
 
         # set Signals/Slots
         self.btn_menu_home.clicked.connect(lambda : Switch_Screen("home"))
@@ -815,7 +857,7 @@ class Users_Screen(QDialog):
 
 # Transactions Screen Class -> Transaction UI
 class Transactions_Screen(QDialog):
-    def __init__(self, mainwindow):
+    def __init__(self, mainwindow, _IsNewApp=False):
         super().__init__()
         # set main
         self.mainwindow = mainwindow
@@ -900,7 +942,8 @@ class Transactions_Screen(QDialog):
         #
 
         # Pre Start
-        self._pre_start()
+        if _IsNewApp == False:
+            self._pre_start()
 
         # set Signals/Slots
         self.btn_menu_home.clicked.connect(lambda : Switch_Screen("home"))
@@ -1239,8 +1282,9 @@ class Transactions_Screen(QDialog):
         showMessageBox("موفقیت", "مدت امانت مبادله مورد نظر با موفقیت تمدید شد.")
 
 
+# Library Settings PopUp-Screen Class -> LibSettingsDialog UI
 class LibSettingsPage(QDialog):
-    def __init__(self, mainwindow):
+    def __init__(self, mainwindow, _IsNewApp=False):
         super().__init__()
         # set main
         self.mainwindow = mainwindow
@@ -1265,7 +1309,8 @@ class LibSettingsPage(QDialog):
         self.lbl_BookCount = self.findChild(QtWidgets.QLabel, "lbl_BookCount")
 
         # Pre Start
-        self._pre_start()
+        if _IsNewApp == False:
+            self._pre_start()
 
         # set Signals/Slots
         self.btn_save.clicked.connect(lambda : self.Save())
@@ -1363,29 +1408,33 @@ def PopUp_Windows(target:str=None, pop=True):
     else:
         popup_widgets.hide()
 
-screens = {
-        "home"        : 0,
-        "book"        : 1,
-        "user"        : 2,
-        "transaction" : 3,
+main_screens = {
+        "start"       : 0,
+        "home"        : 1,
+        "book"        : 2,
+        "user"        : 3,
+        "transaction" : 4,
     }
 def Switch_Screen(target:str):
-    main_widgets.setCurrentIndex(screens[target])
+    main_widgets.setCurrentIndex(main_screens[target])
 
 def app_exit():
     print("Exiting")
     screen_mainwindow.database.sql_close_connection()
 
 if __name__ == "__main__":
-    global popup_widgets, screen_mainwindow, screen_book, screen_user, screen_transaction
+    global all_screens, main_widgets, popup_widgets, screen_mainwindow, screen_book, screen_user, screen_transaction
     app = QApplication(sys.argv)
     main_widgets = QtWidgets.QStackedWidget()
     
     screen_mainwindow = MainWindow()
-    screen_book = Books_Screen(screen_mainwindow)
-    screen_user = Users_Screen(screen_mainwindow)
-    screen_transaction = Transactions_Screen(screen_mainwindow)
+    screen_start = Start_Screen(screen_mainwindow)
+    _isNewApp = screen_mainwindow._IsNewApp()
+    screen_book = Books_Screen(screen_mainwindow, _isNewApp)
+    screen_user = Users_Screen(screen_mainwindow, _isNewApp)
+    screen_transaction = Transactions_Screen(screen_mainwindow, _isNewApp)
 
+    main_widgets.addWidget(screen_start)
     main_widgets.addWidget(screen_mainwindow)
     main_widgets.addWidget(screen_book)
     main_widgets.addWidget(screen_user)
@@ -1402,9 +1451,14 @@ if __name__ == "__main__":
     popup_widgets = QtWidgets.QStackedWidget()
     popup_widgets.setFixedWidth(640)
     popup_widgets.setFixedHeight(480)
-    popup_LibSettings = LibSettingsPage(screen_mainwindow)
+    popup_LibSettings = LibSettingsPage(screen_mainwindow, _isNewApp)
     popup_widgets.addWidget(popup_LibSettings)
     popup_widgets.hide()
+
+    if _isNewApp:
+        Switch_Screen("start")
+
+    all_screens = [screen_start, screen_mainwindow, screen_book, screen_user, screen_transaction, popup_LibSettings]
 
     try:
         sys.exit(app.exec_())
