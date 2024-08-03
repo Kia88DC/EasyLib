@@ -22,9 +22,18 @@ import sys
 import SimpleSql
 
 
-current_path = "/" + str(os.path.abspath(__file__)).strip("/Code/main.py")
+current_path = str(os.path.abspath(__file__)).strip(r"/main.py")
+# current_path = "/" + str(os.path.abspath(__file__)).strip("/Code/main.py")
+#current_path = current_path[:len(current_path)-5]
+if os.name == "posix":
+    current_path = "/" + current_path
 print(current_path)
+newpaths = [rf'{current_path}/../EasyLib-NonTempDir', rf'{current_path}/../EasyLib-NonTempDir/temp', rf'{current_path}/../EasyLib-NonTempDir/DB']
+for newpath in newpaths:
+    if not os.path.exists(newpath):
+        os.makedirs(newpath)
 # current_path = "App/0.1.0"
+UI_PATH = ""
 
 # Configure Caching System Based on OS
 # on Unix Based
@@ -34,13 +43,15 @@ if os.name == "posix":
         'dogpile.cache.dbm',  # Using a file-based backend for persistence
         expiration_time = 86400,  # Cache items expire after 1 day
         arguments = {
-            'filename': f'{current_path}/temp/EasyLib_Cache.dbm'
+            'filename': f'{current_path}/../EasyLib-NonTempDir/temp/EasyLib_Cache.dbm'
         }
     )
+    UI_PATH = "/MacOS"
 # on Windows
 if os.name == "nt":
     import diskcache
-    CacheRegion = diskcache.Cache(f'{current_path}/temp')
+    CacheRegion = diskcache.Cache(f'{current_path}/../EasyLib-NonTempDir/temp')
+    UI_PATH = "/Windows"
 
 
 # def Caching_Key_Generator(args, prefix:str="", sep:str="|"):
@@ -157,7 +168,7 @@ class Datebase(SimpleSql.Sql):
 class MainWindow(QMainWindow, QDialog):
     def __init__(self):
         super(MainWindow, self).__init__()
-        loadUi(f"{current_path}/UI/home-fa.ui", self)
+        loadUi(f"{current_path}/UI{UI_PATH}/home-fa.ui", self)
         # loadUi(f"{current_path}/home-fa.ui", self)
         
         # Start Local DataBase Connection
@@ -189,7 +200,7 @@ class MainWindow(QMainWindow, QDialog):
             }
         }
         # self.database = Datebase(f"{current_path}/main.db", self._all_DB_Tables)
-        self.database = Datebase(f"{current_path}/DB/main.db", self._all_DB_Tables)
+        self.database = Datebase(f"{current_path}/../EasyLib-NonTempDir/DB/main.db", self._all_DB_Tables)
 
         # define var
         self._user_select_in_progress = False
@@ -278,7 +289,7 @@ class Start_Screen(QDialog):
         # set main
         self.mainwindow = mainwindow
         # load ui
-        loadUi(f"{current_path}/UI/start-fa.ui", self)
+        loadUi(f"{current_path}/UI{UI_PATH}/start-fa.ui", self)
         # loadUi(f"{current_path}/start-fa.ui", self)
 
         # define Widgets
@@ -311,7 +322,7 @@ class Books_Screen(QDialog):
         # set main
         self.mainwindow = mainwindow
         # load ui
-        loadUi(f"{current_path}/UI/book-fa.ui", self)
+        loadUi(f"{current_path}/UI{UI_PATH}/book-fa.ui", self)
         # loadUi(f"{current_path}/book-fa.ui", self)
 
         # define var
@@ -558,7 +569,7 @@ class Users_Screen(QDialog):
         # set main
         self.mainwindow = mainwindow
         # load ui
-        loadUi(f"{current_path}/UI/user-fa.ui", self)
+        loadUi(f"{current_path}/UI{UI_PATH}/user-fa.ui", self)
         # loadUi(f"{current_path}/user-fa.ui", self)
 
         # define var
@@ -862,7 +873,7 @@ class Transactions_Screen(QDialog):
         # set main
         self.mainwindow = mainwindow
         # load ui
-        loadUi(f"{current_path}/UI/transaction-fa.ui", self)
+        loadUi(f"{current_path}/UI{UI_PATH}/transaction-fa.ui", self)
         # loadUi(f"{current_path}/transaction-fa.ui", self)
 
         # define var
@@ -1289,7 +1300,7 @@ class LibSettingsPage(QDialog):
         # set main
         self.mainwindow = mainwindow
         # load ui
-        loadUi(f"{current_path}/UI/LibSettingsDialog-fa.ui", self)
+        loadUi(f"{current_path}/UI{UI_PATH}/LibSettingsDialog-fa.ui", self)
         # loadUi(f"{current_path}/LibSettingsDialog-fa.ui", self)
 
         # define var
