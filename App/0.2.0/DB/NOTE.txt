@@ -1,0 +1,5 @@
+The file "main-test.db" is a preBuilt DataBase that contains a test library and some test books and users, etc.
+
+If Your Usage is testBased and you don't need to create library by yourself, change the name of "main-test.db" to "main.db" and open the app.
+
+If not, you can Delete main-test.db.
