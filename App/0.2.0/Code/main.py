@@ -12,19 +12,21 @@ All of you data will be saved on your device LOCALY, therefor be careful with yo
 """
 
 
+import os
+import sys
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.uic import loadUi
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
-import Resources
-import os
-import sys
+
 import SimpleSql
+import Resources
 
 
-current_path = str(os.path.abspath(__file__)).strip(r"/main.py")
-# current_path = "/" + str(os.path.abspath(__file__)).strip("/Code/main.py")
-#current_path = current_path[:len(current_path)-5]
+# current_path = str(os.path.abspath(__file__)).strip(r"/main.py")
+current_path = str(os.path.abspath(__file__)).strip(r"/Code/main.py")
+
 if os.name == "posix":
     current_path = "/" + current_path
 print(current_path)
@@ -32,7 +34,6 @@ newpaths = [rf'{current_path}/../EasyLib-NonTempDir', rf'{current_path}/../EasyL
 for newpath in newpaths:
     if not os.path.exists(newpath):
         os.makedirs(newpath)
-# current_path = "App/0.1.0"
 UI_PATH = ""
 
 # Configure Caching System Based on OS
