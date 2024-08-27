@@ -1,36 +1,41 @@
-#  ------------------------ 
+#  ------------------------
 # |                        |
 # |  By @Kiarash Shahbazi  |
 # |                        |
-#  ------------------------ 
-__version__ = "0.1.0"
+#  ------------------------
 """
 -EasyLib™- is a -Library Management Application-
 This App will help you manage your library.
-Its usage is for librarians ONLY and should not be accessable for members of a library
+Its usage is for librarians ONLY and should not be accessable for members of a library.
 All of you data will be saved on your device LOCALY, therefor be careful with your data.
+
+__version__ = "0.2.0"
 """
 
 
 import os
 import sys
 
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtCore, QtWidgets
 from PyQt5.uic import loadUi
-from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDialog
 
 import SimpleSql
 import Resources
 
 
-# current_path = str(os.path.abspath(__file__)).strip(r"/main.py")
-current_path = str(os.path.abspath(__file__)).strip(r"/Code/main.py")
+# CURRENT_PATH = str(os.path.abspath(__file__)).strip(r"/main.py")
+CURRENT_PATH = str(os.path.abspath(__file__)).strip(r"/Code/main.py")
 
 if os.name == "posix":
-    current_path = "/" + current_path
-print(current_path)
-newpaths = [rf'{current_path}/../EasyLib-NonTempDir', rf'{current_path}/../EasyLib-NonTempDir/temp', rf'{current_path}/../EasyLib-NonTempDir/DB']
+    CURRENT_PATH = "/" + CURRENT_PATH
+print(CURRENT_PATH)
+
+newpaths = [
+    rf'{CURRENT_PATH}/../EasyLib-NonTempDir',
+    rf'{CURRENT_PATH}/../EasyLib-NonTempDir/temp',
+    rf'{CURRENT_PATH}/../EasyLib-NonTempDir/DB'
+]
 for newpath in newpaths:
     if not os.path.exists(newpath):
         os.makedirs(newpath)
@@ -44,18 +49,17 @@ if os.name == "posix":
         'dogpile.cache.dbm',  # Using a file-based backend for persistence
         expiration_time = 86400,  # Cache items expire after 1 day
         arguments = {
-            'filename': f'{current_path}/../EasyLib-NonTempDir/temp/EasyLib_Cache.dbm'
+            'filename': f'{CURRENT_PATH}/../EasyLib-NonTempDir/temp/EasyLib_Cache.dbm'
         }
     )
     UI_PATH = "/MacOS"
 # on Windows
 if os.name == "nt":
     import diskcache
-    CacheRegion = diskcache.Cache(f'{current_path}/../EasyLib-NonTempDir/temp')
+    CacheRegion = diskcache.Cache(f'{CURRENT_PATH}/../EasyLib-NonTempDir/temp')
     UI_PATH = "/Windows"
 
 
-# def Caching_Key_Generator(args, prefix:str="", sep:str="|"):
 def Caching_Key_Generator(mainArgs, args, kwargs, prefix:str="", sep:str="|"):
     key = prefix
     if mainArgs:
@@ -75,14 +79,18 @@ def Caching_Key_Generator(mainArgs, args, kwargs, prefix:str="", sep:str="|"):
 
     return key
 
+
 # Configure Caching Process Based on OS
 # on Unix Based
 if os.name == "posix":
     def cache_on_kwargs(func, namespace="", sep="|", key_generator=Caching_Key_Generator):
         nargs = func.__code__.co_argcount
+
         def wrapper(*args, **kwargs):
             _ = 0
-            if func.__code__.co_varnames[0] in ("self", "cls"): _ = 1
+            if func.__code__.co_varnames[0] in ("self", "cls"):
+                _ = 1
+
             key = key_generator(args[_:nargs], args[nargs:], kwargs, namespace, sep)
             _cache_value = CacheRegion.get(key)
 
@@ -90,7 +98,7 @@ if os.name == "posix":
                 result = func(*args, **kwargs)
                 CacheRegion.set(key, result)
                 return result
-            
+
             else:
                 return _cache_value
 
@@ -99,9 +107,12 @@ if os.name == "posix":
 if os.name == "nt":
     def cache_on_kwargs(func, namespace="", sep="|", key_generator=Caching_Key_Generator):
         nargs = func.__code__.co_argcount
+
         def wrapper(*args, **kwargs):
             _ = 0
-            if func.__code__.co_varnames[0] in ("self", "cls"): _ = 1
+            if func.__code__.co_varnames[0] in ("self", "cls"):
+                _ = 1
+
             key = key_generator(args[_:nargs], args[nargs:], kwargs, namespace, sep)
             # _cache_value = CacheRegion.get(key)
 
@@ -109,7 +120,7 @@ if os.name == "nt":
             if key in CacheRegion:
                 result = CacheRegion[key]
                 return result
-            
+
             else:
                 # _result = CacheRegion.set(key, result)
                 _result = func(*args, **kwargs)
@@ -119,8 +130,11 @@ if os.name == "nt":
         return wrapper
 
 
-
 class Datebase(SimpleSql.Sql):
+    """
+    Database manager class.
+    Inherits Sql module from SimpleSql, to costumize methods.
+    """
     def __init__(self, db_name: str, all_db) -> None:
         super().__init__(db_name)
         self.All_DBs = all_db
@@ -138,18 +152,20 @@ class Datebase(SimpleSql.Sql):
     if os.name == "nt":
         def _ExpireCache(self, hard=True):
             CacheRegion.clear()
-    
+
     @cache_on_kwargs
     def cached_sql_show(self, table_name: str, all=True, **_kwargs):
         return super().sql_show(table_name, all, **_kwargs)
 
     def Search(self, text:str, category:str, tableName:str, opr:str="LIKE", all=True):
-        return self.cached_sql_show(tableName, all=all, 
-            condition_columns=[category], 
-            condition_values=[text], 
-            condition_oprs=[opr], 
+        return self.cached_sql_show(
+            tableName,
+            all=all,
+            condition_columns=[category],
+            condition_values=[text],
+            condition_oprs=[opr],
         )
-    
+
     def Add(self, tableName, columns:list[str], values=tuple[str]):
         _columns = str(columns).strip("[]").strip("]")
         _nValue = ("?,"*len(_columns.split(","))).strip(",")
@@ -157,7 +173,13 @@ class Datebase(SimpleSql.Sql):
         self._ExpireCache(hard=True)
 
     def Delete(self, tableName:str, searchCol:str, searchValue:str, searchOpr:str, deleteAll=False):
-        self.sql_delete_row(tableName, condition=not deleteAll, condition_columns=[searchCol], condition_values=[searchValue], condition_oprs=[searchOpr])
+        self.sql_delete_row(
+            tableName,
+            condition=not deleteAll,
+            condition_columns=[searchCol],
+            condition_values=[searchValue],
+            condition_oprs=[searchOpr]
+        )
         self._ExpireCache(hard=True)
 
     def Update(self, tableName, targetColumn, newValue, condition_column, condition_opr, condition_value):
@@ -167,41 +189,45 @@ class Datebase(SimpleSql.Sql):
 
 # Main Window Class -> Home UI
 class MainWindow(QMainWindow, QDialog):
+    """
+    Backend class for Home page UI.
+    Startup and manage Home Window.
+    """
+
     def __init__(self):
         super(MainWindow, self).__init__()
-        loadUi(f"{current_path}/UI{UI_PATH}/home-fa.ui", self)
-        # loadUi(f"{current_path}/home-fa.ui", self)
-        
+        loadUi(f"{CURRENT_PATH}/UI{UI_PATH}/home-fa.ui", self)
+
         # Start Local DataBase Connection
         self._all_DB_Tables = {
             "All": ["Library", "Category", "Book", "User", "Transaction"],
             "AllInstances": {},
             "Category": {
-                "table" : "'id' INTEGER PRIMARY KEY AUTOINCREMENT, 'Name' TEXT NOT NULL UNIQUE, 'CodeName' TEXT NOT NULL UNIQUE",
-                "columns" : ["id", "Name", "CodeName"]
+                "table": "'id' INTEGER PRIMARY KEY AUTOINCREMENT, 'Name' TEXT NOT NULL UNIQUE, 'CodeName' TEXT NOT NULL UNIQUE",
+                "columns": ["id", "Name", "CodeName"]
             },
             "Library": {
-                "table" : "'id' INTEGER PRIMARY KEY, 'Name' TEXT DEFAULT '-', 'Librarian' TEXT DEFAULT '-', 'bookCount' INTEGER DEFAULT 0, 'userCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP",
+                "table": "'id' INTEGER PRIMARY KEY, 'Name' TEXT DEFAULT '-', 'Librarian' TEXT DEFAULT '-', 'bookCount' INTEGER DEFAULT 0, 'userCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP",
                 "columns": ["id", "Name", "Librarian", "bookCount", "userCount"]
             },
             "Book": {
-                # "table" : "id INTEGER PRIMARY KEY,title TEXT,author TEXT,category TEXT,book_code TEXT,state_borrowed INTEGER,borrowedCount INTEGER,created_at TEXT",
-                "table" : "'id' INTEGER PRIMARY KEY, 'Title' TEXT NOT NULL, 'Author' TEXT, 'Category' TEXT NOT NULL, 'book_code' TEXT NOT NULL UNIQUE, 'state_borrowed' INTEGER DEFAULT 0, 'borrowedCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY('Category') REFERENCES 'Category'('Name')",
+                # "table": "id INTEGER PRIMARY KEY,title TEXT,author TEXT,category TEXT,book_code TEXT,state_borrowed INTEGER,borrowedCount INTEGER,created_at TEXT",
+                "table": "'id' INTEGER PRIMARY KEY, 'Title' TEXT NOT NULL, 'Author' TEXT, 'Category' TEXT NOT NULL, 'book_code' TEXT NOT NULL UNIQUE, 'state_borrowed' INTEGER DEFAULT 0, 'borrowedCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP, FOREIGN KEY('Category') REFERENCES 'Category'('Name')",
                 "columns": ["id", "Title", "Author", "Category", "book_code", "state_borrowed", "borrowedCount", "created_at"]
             },
             "User": {
-                # "table" : "id INTEGER PRIMARY KEY,name TEXT,user_code TEXT,number TEXT,state_subscribed INTEGER,subExpDate TEXT,state_hasBorrowed INTEGER,currBorrowedCount INTEGER,created_at TEXT",
-                "table" : "'id' INTEGER PRIMARY KEY, 'Name' TEXT NOT NULL, 'user_code' TEXT NOT NULL UNIQUE, 'Number' TEXT, 'state_subscribed' INTEGER DEFAULT 1, 'subExpDate' TEXT NOT NULL, 'state_hasBorrowed' INTEGER DEFAULT 0, 'currBorrowedCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP",
+                # "table": "id INTEGER PRIMARY KEY,name TEXT,user_code TEXT,number TEXT,state_subscribed INTEGER,subExpDate TEXT,state_hasBorrowed INTEGER,currBorrowedCount INTEGER,created_at TEXT",
+                "table": "'id' INTEGER PRIMARY KEY, 'Name' TEXT NOT NULL, 'user_code' TEXT NOT NULL UNIQUE, 'Number' TEXT, 'state_subscribed' INTEGER DEFAULT 1, 'subExpDate' TEXT NOT NULL, 'state_hasBorrowed' INTEGER DEFAULT 0, 'currBorrowedCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP",
                 "columns": ["id", "Name", "user_code", "Number", "state_subscribed", "subExpDate", "state_hasBorrowed", "currBorrowedCount", "created_at"]
             },
             "Transaction": {
-                # "table" : "id INTEGER PRIMARY KEY,user_id TEXT,book_id TEXT,title TEXT,state_done INTEGER,borrowDate TEXT,retrieveDate TEXT,renewCount INTEGER,created_at TEXT",
-                "table" : "'id' INTEGER, 'transaction_code' TEXT, 'user_id' TEXT NOT NULL, 'book_id' TEXT NOT NULL, 'state_done' INTEGER DEFAULT 0, 'borrowDate' TEXT NOT NULL DEFAULT CURRENT_DATE, 'retrieveDate' TEXT, 'renewCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY('id'), FOREIGN KEY('book_id') REFERENCES 'Book'('id'), FOREIGN KEY('user_id') REFERENCES 'User'('id')",
+                # "table": "id INTEGER PRIMARY KEY,user_id TEXT,book_id TEXT,title TEXT,state_done INTEGER,borrowDate TEXT,retrieveDate TEXT,renewCount INTEGER,created_at TEXT",
+                "table": "'id' INTEGER, 'transaction_code' TEXT, 'user_id' TEXT NOT NULL, 'book_id' TEXT NOT NULL, 'state_done' INTEGER DEFAULT 0, 'borrowDate' TEXT NOT NULL DEFAULT CURRENT_DATE, 'retrieveDate' TEXT, 'renewCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY('id'), FOREIGN KEY('book_id') REFERENCES 'Book'('id'), FOREIGN KEY('user_id') REFERENCES 'User'('id')",
                 "columns": ["id", "transaction_code", "user_id", "book_id", "state_done", "borrowDate", "retrieveDate", "renewCount", "created_at"]
             }
         }
-        # self.database = Datebase(f"{current_path}/main.db", self._all_DB_Tables)
-        self.database = Datebase(f"{current_path}/../EasyLib-NonTempDir/DB/main.db", self._all_DB_Tables)
+        # self.database = Datebase(f"{CURRENT_PATH}/main.db", self._all_DB_Tables)
+        self.database = Datebase(f"{CURRENT_PATH}/../EasyLib-NonTempDir/DB/main.db", self._all_DB_Tables)
 
         # define var
         self._user_select_in_progress = False
@@ -218,7 +244,7 @@ class MainWindow(QMainWindow, QDialog):
 
         self.btn_lib_acc = self.findChild(QtWidgets.QPushButton, "btn_lib_acc")
         self.btn_info_moreinfo = self.findChild(QtWidgets.QPushButton, "btn_info_moreinfo")
-        
+
         self.lbl_info_LibName = self.findChild(QtWidgets.QLabel, "lbl_info_LibName")
         self.lbl_info_Librarian = self.findChild(QtWidgets.QLabel, "lbl_info_Librarian")
         self.lbl_info_BookCount = self.findChild(QtWidgets.QLabel, "lbl_info_BookCount")
@@ -235,48 +261,61 @@ class MainWindow(QMainWindow, QDialog):
         #
 
         # Pre Start
-        if self._IsNewApp() == False:
+        if not self._IsNewApp():
             self._pre_start()
 
         # set Signals/Slots
-        self.btn_menu_book.clicked.connect(lambda : Switch_Screen("book"))
-        self.btn_menu_user.clicked.connect(lambda : Switch_Screen("user"))
-        self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen("transaction"))
+        self.btn_menu_book.clicked.connect(lambda: Switch_Screen("book"))
+        self.btn_menu_user.clicked.connect(lambda: Switch_Screen("user"))
+        self.btn_menu_transaction.clicked.connect(lambda: Switch_Screen("transaction"))
         #
-        self.btn_lib_acc.clicked.connect(lambda : PopUp_Windows("LibSettings"))
-        self.btn_info_moreinfo.clicked.connect(lambda : PopUp_Windows("LibSettings"))        
+        self.btn_lib_acc.clicked.connect(lambda: PopUp_Windows("LibSettings"))
+        self.btn_info_moreinfo.clicked.connect(lambda: PopUp_Windows("LibSettings"))
         #
-        self.btn_quick_accsess_1.clicked.connect(lambda : Switch_Screen("transaction"))
-        self.btn_quick_accsess_2.clicked.connect(lambda : Switch_Screen("transaction"))
-        self.btn_quick_accsess_5.clicked.connect(lambda : Switch_Screen("transaction"))
+        self.btn_quick_accsess_1.clicked.connect(lambda: Switch_Screen("transaction"))
+        self.btn_quick_accsess_2.clicked.connect(lambda: Switch_Screen("transaction"))
+        self.btn_quick_accsess_5.clicked.connect(lambda: Switch_Screen("transaction"))
 
-        self.btn_quick_accsess_3.clicked.connect(lambda : Switch_Screen("book"))
-        self.btn_quick_accsess_7.clicked.connect(lambda : Switch_Screen("book"))
-        
-        self.btn_quick_accsess_4.clicked.connect(lambda : Switch_Screen("user"))
-        self.btn_quick_accsess_6.clicked.connect(lambda : Switch_Screen("user"))
-        self.btn_quick_accsess_8.clicked.connect(lambda : Switch_Screen("user"))
+        self.btn_quick_accsess_3.clicked.connect(lambda: Switch_Screen("book"))
+        self.btn_quick_accsess_7.clicked.connect(lambda: Switch_Screen("book"))
+
+        self.btn_quick_accsess_4.clicked.connect(lambda: Switch_Screen("user"))
+        self.btn_quick_accsess_6.clicked.connect(lambda: Switch_Screen("user"))
+        self.btn_quick_accsess_8.clicked.connect(lambda: Switch_Screen("user"))
         #
-    
+
     def _pre_start(self):
-        _libBookCount, _libUserCount = self.database.cur.execute("SELECT  (SELECT COUNT(*) FROM Book) As bookCount, (SELECT COUNT(*) FROM User) as userCount;").fetchone()
-        _r = self.database.cur.execute("SELECT  Name, Librarian, created_at FROM Library;").fetchone()
+        _libBookCount, _libUserCount = self.database.cur.execute(
+            "SELECT  (SELECT COUNT(*) FROM Book) As bookCount, (SELECT COUNT(*) FROM User) as userCount;"
+        ).fetchone()
+        _r = self.database.cur.execute(
+            "SELECT  Name, Librarian, created_at FROM Library;"
+        ).fetchone()
         print(_r)
-        _libName, _libLibrarian, _libCreated_at = self.database.cur.execute("SELECT  Name, Librarian, created_at FROM Library;").fetchone()
+        _libName, _libLibrarian, _libCreated_at = self.database.cur.execute(
+            "SELECT  Name, Librarian, created_at FROM Library;"
+        ).fetchone()
         self.database.Delete("Library", "id", "1", "=")
-        self.database.Add("Library", ["Name", "Librarian", "bookCount", "userCount", "created_at"], (_libName, _libLibrarian, _libBookCount, _libUserCount, _libCreated_at))
+        self.database.Add(
+            "Library",
+            ["Name", "Librarian", "bookCount", "userCount", "created_at"],
+            (_libName, _libLibrarian, _libBookCount, _libUserCount, _libCreated_at)
+        )
         # Lib Info
         self.library = self.database.cached_sql_show("Library", all=True)[1]
 
         self.lbl_lib_name.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("Name")]))
-        
+
         self.lbl_info_LibName.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("Name")]))
         self.lbl_info_Librarian.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("Librarian")]))
         self.lbl_info_BookCount.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("bookCount")]))
         self.lbl_info_UserCount.setText(str(self.library[self._all_DB_Tables["Library"]["columns"].index("userCount")]))
 
     def _IsNewApp(self):
-        _libCount, = self.database.cur.execute("SELECT COUNT(*) FROM Library;").fetchone()
+        _libCount, = self.database.cur.execute(
+            "SELECT COUNT(*) FROM Library;"
+        ).fetchone()
+
         if _libCount == 0:
             return True
         elif _libCount > 0:
@@ -284,14 +323,19 @@ class MainWindow(QMainWindow, QDialog):
 
 
 # Start Screen Class -> Start UI
-class Start_Screen(QDialog):
+class StartScreen(QDialog):
+    """
+    Backend class for Start page UI.
+    Startup and manage Start Window.
+    """
+
     def __init__(self, mainwindow):
         super().__init__()
         # set main
         self.mainwindow = mainwindow
         # load ui
-        loadUi(f"{current_path}/UI{UI_PATH}/start-fa.ui", self)
-        # loadUi(f"{current_path}/start-fa.ui", self)
+        loadUi(f"{CURRENT_PATH}/UI{UI_PATH}/start-fa.ui", self)
+        # loadUi(f"{CURRENT_PATH}/start-fa.ui", self)
 
         # define Widgets
         self.input_LibName = self.findChild(QtWidgets.QLineEdit, "input_LibName")
@@ -299,17 +343,20 @@ class Start_Screen(QDialog):
         self.btn_submit = self.findChild(QtWidgets.QPushButton, "btn_submit")
 
         # set Signals/Slots
-        self.btn_submit.clicked.connect(lambda : self.CreateLib())
-    
+        self.btn_submit.clicked.connect(lambda: self.CreateLib())
+
     def CreateLib(self):
         _LibName = self.input_LibName.text()
         _Librarian = self.input_Librarian.text()
         if _LibName == "" or _Librarian == "":
             showMessageBox("خطا!", "لطفا ابتدا اطلاعات کتابخانه را وارد کنید.", icon="Critical")
             return None
-        
-        self.mainwindow.database.Add("Library", "Name,Librarian", (str(_LibName), str(_Librarian)))
-        
+
+        self.mainwindow.database.Add(
+            "Library",
+            "Name,Librarian",
+            (str(_LibName), str(_Librarian)))
+
         for _screen in all_screens[1:]:
             _screen._pre_start()
 
@@ -317,20 +364,25 @@ class Start_Screen(QDialog):
 
 
 # Books Screen Class -> Book UI
-class Books_Screen(QDialog):
+class BooksScreen(QDialog):
+    """
+    Backend class for Books page UI.
+    Startup and manage Books Window.
+    """
+
     def __init__(self, mainwindow, _IsNewApp=False):
         super().__init__()
         # set main
         self.mainwindow = mainwindow
         # load ui
-        loadUi(f"{current_path}/UI{UI_PATH}/book-fa.ui", self)
-        # loadUi(f"{current_path}/book-fa.ui", self)
+        loadUi(f"{CURRENT_PATH}/UI{UI_PATH}/book-fa.ui", self)
+        # loadUi(f"{CURRENT_PATH}/book-fa.ui", self)
 
         # define var
         self.SearchCategories = {
-            "عنوان": "Title", 
-            "نویسنده": "Author", 
-            "موضوع": "Category", 
+            "عنوان": "Title",
+            "نویسنده": "Author",
+            "موضوع": "Category",
             "کد کتاب": "book_code"
         }
         self.info_widgets = {}
@@ -385,23 +437,23 @@ class Books_Screen(QDialog):
         #
 
         # Pre Start
-        if _IsNewApp == False:
+        if not _IsNewApp:
             self._pre_start()
 
         # set Signals/Slots
-        self.btn_menu_home.clicked.connect(lambda : Switch_Screen("home"))
-        self.btn_menu_user.clicked.connect(lambda : Switch_Screen("user"))
-        self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen("transaction"))
+        self.btn_menu_home.clicked.connect(lambda: Switch_Screen("home"))
+        self.btn_menu_user.clicked.connect(lambda: Switch_Screen("user"))
+        self.btn_menu_transaction.clicked.connect(lambda: Switch_Screen("transaction"))
         #
-        self.btn_lib_acc.clicked.connect(lambda : PopUp_Windows("LibSettings"))
+        self.btn_lib_acc.clicked.connect(lambda: PopUp_Windows("LibSettings"))
         # Search action
-        self.btn_search.clicked.connect(lambda : self.BookSearch())
+        self.btn_search.clicked.connect(lambda: self.BookSearch())
         # Book Select
-        self.tableWidget_search_results.itemSelectionChanged.connect(lambda : self.ShowBook())
+        self.tableWidget_search_results.itemSelectionChanged.connect(lambda: self.ShowBook())
         # Book Add
-        self.btn_bookAdd_submit.clicked.connect(lambda : self.AddBook())
+        self.btn_bookAdd_submit.clicked.connect(lambda: self.AddBook())
         # Book Del
-        self.btn_delBook_submit.clicked.connect(lambda : self.DeleteBook())
+        self.btn_delBook_submit.clicked.connect(lambda: self.DeleteBook())
         #
 
     def _pre_start(self):
@@ -414,18 +466,19 @@ class Books_Screen(QDialog):
 
     def BookSearch(self, _search_category=None):
         self._clear()
-        if self.inp_search_category.currentIndex() == 0 and _search_category == None:
+        if self.inp_search_category.currentIndex() == 0 and _search_category is None:
             showMessageBox("خطا!", "لطفا ابتدا دسته بندی جستجو را انتخاب کنید.", icon="Critical")
             return None
         if not _search_category:
             _search_category = self.SearchCategories[self.inp_search_category.currentText()]
         _search_text = self.inp_search_box.text()
-        
+
         _results = self.mainwindow.database.Search(text=f"%{_search_text}%", category=_search_category, tableName="Book", opr="LIKE")
-        if _results == None or _results == []:
+        if _results is None or _results == []:
             showMessageBox("", "هیچ کتابی با این مشخصات پیدا نشد!", icon="")
             self._clearRows(self.tableWidget_search_results)
             return None
+
         self.ShowSearchResults(_results[1:])
 
     def _clear(self, infoBox=True, delBox=True, addBox=False):
@@ -440,7 +493,7 @@ class Books_Screen(QDialog):
             self.inp_book_code.setReadOnly(True)
             self.lbl_book_state.setText("")
             self.lbl_book_LendCount.setText("")
-        
+
         if delBox:
             self.__item_is_selected = False
             self.lbl_delBook_title.clear()
@@ -454,14 +507,14 @@ class Books_Screen(QDialog):
             self.input_bookAdd_book_code.clear()
             self.input_bookAdd_category.setCurrentIndex(0)
 
-    def _clearRows(self, table:QtWidgets.QTableWidget):
+    def _clearRows(self, table: QtWidgets.QTableWidget):
         self.__clear_in_progress = True
         rc = table.rowCount()
         for row in range(rc):
             table.removeRow(rc-row-1)
         self.__clear_in_progress = False
 
-    def ShowSearchResults(self, results:list[tuple]):
+    def ShowSearchResults(self, results: list[tuple]):
         self._clearRows(self.tableWidget_search_results)
 
         for row in results:
@@ -471,9 +524,10 @@ class Books_Screen(QDialog):
             for column in [self.SearchCategories[key] for key in self.SearchCategories.keys()]:
                 _col_index = self.mainwindow._all_DB_Tables["Book"]["columns"].index(column)
                 _value = row[_col_index]
-                if _value == None: _value = ""
+                if _value is None:
+                    _value = ""
 
-                self.tableWidget_search_results.setItem(_pose , _col_index-1, QtWidgets.QTableWidgetItem(str(_value)))
+                self.tableWidget_search_results.setItem(_pose, _col_index-1, QtWidgets.QTableWidgetItem(str(_value)))
 
     def _selectBook(self):
         _book_code = self.tableWidget_search_results.selectedItems()[3].text()
@@ -481,19 +535,19 @@ class Books_Screen(QDialog):
         return self.mainwindow.database.Search(text=_book_code, category="book_code", tableName="Book", opr="=")[1]
 
     def ShowBook(self):
-        if self.mainwindow._book_select_in_progress == True:
+        if self.mainwindow._book_select_in_progress:
             _user = self._selectBook()
             self.mainwindow._selected_book["Title"] = _user[self.mainwindow._all_DB_Tables["Book"]["columns"].index("Title")]
             self.mainwindow._selected_book["book_code"] = _user[self.mainwindow._all_DB_Tables["Book"]["columns"].index("book_code")]
             Switch_Screen("transaction")
             screen_transaction._selectBook()
             return None
-        
+
         if self.__clear_in_progress:
             return None
         self._clear()
         _book = self._selectBook()
-        
+
         self.inp_book_title.setReadOnly(False)
         self.inp_book_author.setReadOnly(False)
         self.inp_book_category.setReadOnly(False)
@@ -508,7 +562,7 @@ class Books_Screen(QDialog):
                 elif _text == "1":
                     _text = "نا موجود"
             self.info_widgets["info"][column].setText(_text)
-        
+
         for column in self.info_widgets["delBook"].keys():
             _col_index = self.mainwindow._all_DB_Tables["Book"]["columns"].index(column)
             _text = str(_book[_col_index])
@@ -535,9 +589,9 @@ class Books_Screen(QDialog):
         if self.input_bookAdd_category.currentIndex() == 0:
             showMessageBox("خطا!", "لطفا ابتدا موضوع کتاب را انتخاب کنید.", icon="Critical")
             return None
-        
+
         if self.ChBox_automatic_code.isChecked():
-           _book_code = self._codeCreate(_category)
+            _book_code = self._codeCreate(_category)
 
         import sqlite3
         try:
@@ -564,20 +618,25 @@ class Books_Screen(QDialog):
 
 
 # Users Screen Class -> User UI
-class Users_Screen(QDialog):
+class UsersScreen(QDialog):
+    """
+    Backend class for Users page UI.
+    Startup and manage Users Window.
+    """
+    
     def __init__(self, mainwindow, _IsNewApp=False):
         super().__init__()
         # set main
         self.mainwindow = mainwindow
         # load ui
-        loadUi(f"{current_path}/UI{UI_PATH}/user-fa.ui", self)
-        # loadUi(f"{current_path}/user-fa.ui", self)
+        loadUi(f"{CURRENT_PATH}/UI{UI_PATH}/user-fa.ui", self)
+        # loadUi(f"{CURRENT_PATH}/user-fa.ui", self)
 
         # define var
         self.SearchCategories = {
-            "نام": "Name", 
-            "شناسه": "user_code", 
-            "شماره تلفن": "Number", 
+            "نام": "Name",
+            "شناسه": "user_code",
+            "شماره تلفن": "Number",
         }
         self.subAmount_Directives = {
             "یک ماه":   {"Directive": "%m", "Addition": 1},
@@ -646,25 +705,25 @@ class Users_Screen(QDialog):
         #
 
         # Pre Start
-        if _IsNewApp == False:
+        if not _IsNewApp:
             self._pre_start()
 
         # set Signals/Slots
-        self.btn_menu_home.clicked.connect(lambda : Switch_Screen("home"))
-        self.btn_menu_book.clicked.connect(lambda : Switch_Screen("book"))
-        self.btn_menu_transaction.clicked.connect(lambda : Switch_Screen("transaction"))
+        self.btn_menu_home.clicked.connect(lambda: Switch_Screen("home"))
+        self.btn_menu_book.clicked.connect(lambda: Switch_Screen("book"))
+        self.btn_menu_transaction.clicked.connect(lambda: Switch_Screen("transaction"))
         #
-        self.btn_lib_acc.clicked.connect(lambda : PopUp_Windows("LibSettings"))
+        self.btn_lib_acc.clicked.connect(lambda: PopUp_Windows("LibSettings"))
         # Search action
-        self.btn_search.clicked.connect(lambda : self.UserSearch())
+        self.btn_search.clicked.connect(lambda: self.UserSearch())
         # User Select
-        self.tableWidget_search_results.itemSelectionChanged.connect(lambda : self.ShowUser())
+        self.tableWidget_search_results.itemSelectionChanged.connect(lambda: self.ShowUser())
         # User Add
-        self.btn_userAdd_submit.clicked.connect(lambda : self.AddUser())
+        self.btn_userAdd_submit.clicked.connect(lambda: self.AddUser())
         # User Del
-        self.btn_delUser_submit.clicked.connect(lambda : self.DeleteUser())
+        self.btn_delUser_submit.clicked.connect(lambda: self.DeleteUser())
         # Renew Sub
-        self.btn_renewSub_submit.clicked.connect(lambda : self.RenewSub())
+        self.btn_renewSub_submit.clicked.connect(lambda: self.RenewSub())
         #
 
     def _pre_start(self):
@@ -677,15 +736,15 @@ class Users_Screen(QDialog):
 
     def UserSearch(self, _search_category=None):
         self._clear()
-        if self.inp_search_category.currentIndex() == 0 and _search_category == None:
+        if self.inp_search_category.currentIndex() == 0 and _search_category is None:
             showMessageBox("خطا!", "لطفا ابتدا دسته بندی جستجو را انتخاب کنید.", icon="Critical")
             return None
         if not _search_category:
             _search_category = self.SearchCategories[self.inp_search_category.currentText()]
         _search_text = self.inp_search_box.text()
-        
+
         _results = self.mainwindow.database.Search(text=f"%{_search_text}%", category=_search_category, tableName="User", opr="LIKE")
-        if _results == None or _results == []:
+        if _results is None or _results == []:
             showMessageBox("", "هیچ عضوی با این مشخصات پیدا نشد!", icon="")
             self._clearRows(self.tableWidget_search_results)
             return None
@@ -702,13 +761,13 @@ class Users_Screen(QDialog):
             self.lbl_user_borrow_state.setText("")
             self.lbl_user_borrow_count.setText("")
             self.lbl_user_subscribtion_state.setText("")
-        
+
         if delBox:
             self.__item_is_selected = False
             self.lbl_delUser_name.clear()
             self.lbl_delUser_user_code.clear()
             self.lbl_delUser_number.clear()
-        
+
         if renewBox:
             self.lbl_renewSub_name.clear()
             self.lbl_renewSub_user_code.clear()
@@ -718,14 +777,14 @@ class Users_Screen(QDialog):
             self.input_userAdd_user_code.clear()
             self.input_userAdd_number.clear()
 
-    def _clearRows(self, table:QtWidgets.QTableWidget):
+    def _clearRows(self, table: QtWidgets.QTableWidget):
         self.__clear_in_progress = True
         rc = table.rowCount()
         for row in range(rc):
             table.removeRow(rc-row-1)
         self.__clear_in_progress = False
 
-    def ShowSearchResults(self, results:list[tuple]):
+    def ShowSearchResults(self, results: list[tuple]):
         self._clearRows(self.tableWidget_search_results)
 
         for row in results:
@@ -735,9 +794,10 @@ class Users_Screen(QDialog):
             for column in [self.SearchCategories[key] for key in self.SearchCategories.keys()]:
                 _col_index = self.mainwindow._all_DB_Tables["User"]["columns"].index(column)
                 _value = row[_col_index]
-                if _value == None: _value = ""
+                if _value is None:
+                    _value = ""
 
-                self.tableWidget_search_results.setItem(_pose , _col_index-1, QtWidgets.QTableWidgetItem(str(_value)))
+                self.tableWidget_search_results.setItem(_pose, _col_index-1, QtWidgets.QTableWidgetItem(str(_value)))
 
     def _selectUser(self):
         _user_code = self.tableWidget_search_results.selectedItems()[1].text()
@@ -745,19 +805,19 @@ class Users_Screen(QDialog):
         return self.mainwindow.database.Search(text=_user_code, category="user_code", tableName="User", opr="=")[1]
 
     def ShowUser(self):
-        if self.mainwindow._user_select_in_progress == True:
+        if self.mainwindow._user_select_in_progress:
             _user = self._selectUser()
             self.mainwindow._selected_user["Name"] = _user[self.mainwindow._all_DB_Tables["User"]["columns"].index("Name")]
             self.mainwindow._selected_user["user_code"] = _user[self.mainwindow._all_DB_Tables["User"]["columns"].index("user_code")]
             Switch_Screen("transaction")
             screen_transaction._selectUser()
             return None
-        
+
         if self.__clear_in_progress:
             return None
         self._clear()
         _user = self._selectUser()
-        
+
         self.inp_user_name.setReadOnly(False)
         self.inp_user_code.setReadOnly(False)
         self.inp_user_number.setReadOnly(False)
@@ -776,7 +836,7 @@ class Users_Screen(QDialog):
                 elif _text == "1":
                     _text = "عضو است"
             self.info_widgets["info"][column].setText(_text)
-        
+
         for column in self.info_widgets["delUser"].keys():
             _col_index = self.mainwindow._all_DB_Tables["User"]["columns"].index(column)
             _text = str(_user[_col_index])
@@ -807,9 +867,9 @@ class Users_Screen(QDialog):
         if self.input_userAdd_subAmount.currentIndex() == 0:
             showMessageBox("خطا!", "لطفا ابتدا مدت عضویت را انتخاب کنید.", icon="Critical")
             return None
-        
+
         if self.ChBox_automatic_code.isChecked():
-           _user_code = self._codeCreate()
+            _user_code = self._codeCreate()
 
         import time
         _targetVal = int(time.strftime(self.subAmount_Directives[_subAmount]["Directive"]))
@@ -851,7 +911,7 @@ class Users_Screen(QDialog):
         _user_code = self.lbl_renewSub_user_code.text()
 
         _targetVal = self.mainwindow.database.cached_sql_show("User", all=False, column="subExpDate", condition_columns=["user_code"], condition_values=[_user_code],  condition_oprs=["="])[1][0]
-        _targetVal_year  = _targetVal.split(" ")[0].split("-")[0]
+        _targetVal_year = _targetVal.split(" ")[0].split("-")[0]
         _targetVal_month = _targetVal.split(" ")[0].split("-")[1]
         _targetVal_other = _targetVal.split(" ")[0].split("-")[2] + " " + _targetVal.split(" ")[1]
 
@@ -862,28 +922,33 @@ class Users_Screen(QDialog):
             _subExpDate = int(_targetVal.split(" ")[0].split("-")[1]) + int(self.subAmount_Directives[_subRenewAmount]["Addition"])
             _subExpDate = f'{_subExpDate:02}'
             _subExpDate = f"{_targetVal_year}-{_subExpDate}-{_targetVal_other}"
-        
+
         self.mainwindow.database.Update("User", "subExpDate", _subExpDate, "user_code", "=", _user_code)
         showMessageBox("موفقیت", "مدت اشتراک عضو مورد نظر با موفقیت تمدید شد.")
 
 
 # Transactions Screen Class -> Transaction UI
-class Transactions_Screen(QDialog):
+class TransactionsScreen(QDialog):
+    """
+    Backend class for Transactions page UI.
+    Startup and manage Transactions Window.
+    """
+
     def __init__(self, mainwindow, _IsNewApp=False):
         super().__init__()
         # set main
         self.mainwindow = mainwindow
         # load ui
-        loadUi(f"{current_path}/UI{UI_PATH}/transaction-fa.ui", self)
-        # loadUi(f"{current_path}/transaction-fa.ui", self)
+        loadUi(f"{CURRENT_PATH}/UI{UI_PATH}/transaction-fa.ui", self)
+        # loadUi(f"{CURRENT_PATH}/transaction-fa.ui", self)
 
         # define var
         self.SearchCategories = {
-            "نام عضو": "user_id", 
-            "نام کتاب": "book_id", 
-            "وضعیت": "state_done", 
-            "تاریخ امانت": "borrowDate", 
-            "تاریخ تحویل": "retrieveDate", 
+            "نام عضو": "user_id",
+            "نام کتاب": "book_id",
+            "وضعیت": "state_done",
+            "تاریخ امانت": "borrowDate",
+            "تاریخ تحویل": "retrieveDate",
             "شناسه مبادله": "transaction_code"
         }
         self.renewAmount_Directives = {
@@ -954,29 +1019,29 @@ class Transactions_Screen(QDialog):
         #
 
         # Pre Start
-        if _IsNewApp == False:
+        if not _IsNewApp:
             self._pre_start()
 
         # set Signals/Slots
-        self.btn_menu_home.clicked.connect(lambda : Switch_Screen("home"))
-        self.btn_menu_book.clicked.connect(lambda : Switch_Screen("book"))
-        self.btn_menu_user.clicked.connect(lambda : Switch_Screen("user"))
+        self.btn_menu_home.clicked.connect(lambda: Switch_Screen("home"))
+        self.btn_menu_book.clicked.connect(lambda: Switch_Screen("book"))
+        self.btn_menu_user.clicked.connect(lambda: Switch_Screen("user"))
         #
-        self.btn_lib_acc.clicked.connect(lambda : PopUp_Windows("LibSettings"))
+        self.btn_lib_acc.clicked.connect(lambda: PopUp_Windows("LibSettings"))
         # Search action
-        self.btn_search.clicked.connect(lambda : self.TransactionSearch())
+        self.btn_search.clicked.connect(lambda: self.TransactionSearch())
         # Transaction Select
-        self.tableWidget_search_results.itemSelectionChanged.connect(lambda : self.ShowTransaction())
+        self.tableWidget_search_results.itemSelectionChanged.connect(lambda: self.ShowTransaction())
         # Lend
-        self.btn_lend_selectUser.clicked.connect(lambda : self._selectUser())
-        self.btn_lend_deseletUser.clicked.connect(lambda : self._deselectUser())
-        self.btn_lend_selectBook.clicked.connect(lambda : self._selectBook())
-        self.btn_lend_deseletBook.clicked.connect(lambda : self._deselectBook())
-        self.btn_lend_submit.clicked.connect(lambda : self.Lend())
+        self.btn_lend_selectUser.clicked.connect(lambda: self._selectUser())
+        self.btn_lend_deseletUser.clicked.connect(lambda: self._deselectUser())
+        self.btn_lend_selectBook.clicked.connect(lambda: self._selectBook())
+        self.btn_lend_deseletBook.clicked.connect(lambda: self._deselectBook())
+        self.btn_lend_submit.clicked.connect(lambda: self.Lend())
         # Retrieve
-        self.btn_retrieve_submit.clicked.connect(lambda : self.Retrieve())
+        self.btn_retrieve_submit.clicked.connect(lambda: self.Retrieve())
         # BookRenew
-        self.btn_bookRenew_submit.clicked.connect(lambda : self.RenewBook())
+        self.btn_bookRenew_submit.clicked.connect(lambda: self.RenewBook())
         #
 
     def _pre_start(self):
@@ -993,10 +1058,10 @@ class Transactions_Screen(QDialog):
 
     def TransactionSearch(self, _search_category=None):
         self._clear()
-        if self.inp_search_category.currentIndex() == 0 and _search_category == None:
+        if self.inp_search_category.currentIndex() == 0 and _search_category is None:
             showMessageBox("خطا!", "لطفا ابتدا دسته بندی جستجو را انتخاب کنید.", icon="Critical")
             return None
-        
+
         if not _search_category:
             _search_category = self.inp_search_category.currentText()
             if _search_category == "نام عضو":
@@ -1007,28 +1072,27 @@ class Transactions_Screen(QDialog):
                 _search_category = self.SearchCategories[self.inp_search_category.currentText()]
         _search_text = self.inp_search_box.text()
 
-
         if _search_category == "state_done":
             print("state_done")
             if _search_text == "انجام شده":
                 _search_text = 1
             elif _search_text == "منتظر تحویل":
                 _search_text = 0
-        
+
         _results = self.mainwindow.database.cur.execute(
             f"""
-            SELECT 
+            SELECT
                 'Transaction'.id, 'Transaction'.transaction_code, User.Name, Book.Title, 'Transaction'.state_done, 'Transaction'.borrowDate, 'Transaction'.retrieveDate
-            FROM 
-                'Transaction' 
-            INNER JOIN User ON 
-                User.id = 'Transaction'.user_id 
-            INNER JOIN Book ON 
-                Book.id = 'Transaction'.book_id 
+            FROM
+                'Transaction'
+            INNER JOIN User ON
+                User.id = 'Transaction'.user_id
+            INNER JOIN Book ON
+                Book.id = 'Transaction'.book_id
             WHERE {_search_category} LIKE '%{_search_text}%';
             """
         ).fetchall()
-        if _results == None or _results == []:
+        if _results is None or _results == []:
             showMessageBox("", "هیچ مبادله ای با این مشخصات پیدا نشد!", icon="")
             self._clearRows(self.tableWidget_search_results)
             return None
@@ -1042,12 +1106,12 @@ class Transactions_Screen(QDialog):
             self.lbl_transaction_state_done.setText("")
             self.lbl_transaction_lend_date.setText("")
             self.lbl_transaction_retrieve_date.setText("")
-        
+
         if retrieveBox:
             self.__item_is_selected = False
             self.lbl_retrieve_transaction_code.clear()
             self.lbl_transaction_retrieve_date.clear()
-        
+
         if renewBox:
             self.lbl_bookRenew_transaction_code.clear()
             self.input_bookRenew_amount.setCurrentIndex(0)
@@ -1057,14 +1121,14 @@ class Transactions_Screen(QDialog):
             self.lbl_lend_book_name.clear()
             self.lbl_transaction_lend_date.clear()
 
-    def _clearRows(self, table:QtWidgets.QTableWidget):
+    def _clearRows(self, table: QtWidgets.QTableWidget):
         self.__clear_in_progress = True
         rc = table.rowCount()
         for row in range(rc):
             table.removeRow(rc-row-1)
         self.__clear_in_progress = False
 
-    def ShowSearchResults(self, results:list[tuple]):
+    def ShowSearchResults(self, results: list[tuple]):
         self._clearRows(self.tableWidget_search_results)
 
         for row in results:
@@ -1074,29 +1138,30 @@ class Transactions_Screen(QDialog):
             for column in [self.SearchCategories[key] for key in self.SearchCategories.keys()]:
                 _col_index = self.mainwindow._all_DB_Tables["Transaction"]["columns"].index(column)
                 _value = row[_col_index]
-                if _value == None: _value = ""
+                if _value is None:
+                    _value = ""
+
                 if column == "state_done":
                     if _value == "0" or _value == 0:
                         _value = "منتظر تحویل"
                     elif _value == "1" or _value == 1:
                         _value = "انجام شده"
 
-                self.tableWidget_search_results.setItem(_pose , _col_index-1, QtWidgets.QTableWidgetItem(str(_value)))
+                self.tableWidget_search_results.setItem(_pose, _col_index-1, QtWidgets.QTableWidgetItem(str(_value)))
 
     def _selectTransaction(self):
         _transaction_code = self.tableWidget_search_results.selectedItems()[0].text()
         self.__item_is_selected = True
-        # return self.mainwindow.database.Search(text=_transaction_code, category="transaction_code", tableName="Transaction", opr="=")[1]
         return self.mainwindow.database.cur.execute(
             f"""
-            SELECT 
+            SELECT
                 'Transaction'.id, 'Transaction'.transaction_code , User.Name, Book.Title, 'Transaction'.state_done, 'Transaction'.borrowDate, 'Transaction'.retrieveDate
-            FROM 
-                'Transaction' 
-            INNER JOIN User ON 
-                User.id = 'Transaction'.user_id 
-            INNER JOIN Book ON 
-                Book.id = 'Transaction'.book_id 
+            FROM
+                'Transaction'
+            INNER JOIN User ON
+                User.id = 'Transaction'.user_id
+            INNER JOIN Book ON
+                Book.id = 'Transaction'.book_id
             WHERE 'Transaction'.'transaction_code' = '{_transaction_code}';
             """
         ).fetchone()
@@ -1116,7 +1181,7 @@ class Transactions_Screen(QDialog):
                 elif _text == "1":
                     _text = "انجام شده"
             self.info_widgets["info"][column].setText(_text)
-        
+
         for column in self.info_widgets["retrieve"].keys():
             _col_index = self.mainwindow._all_DB_Tables["Transaction"]["columns"].index(column)
             _text = str(_transaction[_col_index])
@@ -1135,7 +1200,7 @@ class Transactions_Screen(QDialog):
             self.info_widgets["bookRenew"][column].setText(_text)
 
     def _selectUser(self):
-        if self.mainwindow._user_select_in_progress == False:
+        if not self.mainwindow._user_select_in_progress:
             self.mainwindow._user_select_in_progress = True
             Switch_Screen("user")
         else:
@@ -1147,9 +1212,9 @@ class Transactions_Screen(QDialog):
             self._selected_user_code = _rVal["user_code"]
             self.mainwindow._selected_user = {}
             self.mainwindow._user_select_in_progress = False
-    
+
     def _deselectUser(self):
-        self.mainwindow._user_select_in_progress == False
+        self.mainwindow._user_select_in_progress = False
         self.mainwindow._selected_user = {}
         self._selected_user_code
         self.lbl_lend_user_name.hide()
@@ -1157,7 +1222,7 @@ class Transactions_Screen(QDialog):
         self.btn_lend_deseletUser.hide()
 
     def _selectBook(self):
-        if self.mainwindow._book_select_in_progress == False:
+        if not self.mainwindow._book_select_in_progress:
             self.mainwindow._book_select_in_progress = True
             Switch_Screen("book")
         else:
@@ -1169,9 +1234,9 @@ class Transactions_Screen(QDialog):
             self._selected_book_code = _rVal["book_code"]
             self.mainwindow._selected_book = {}
             self.mainwindow._book_select_in_progress = False
-    
+
     def _deselectBook(self):
-        self.mainwindow._book_select_in_progress == False
+        self.mainwindow._book_select_in_progress = False
         self.mainwindow._selected_book = {}
         self._selected_book_code
         self.lbl_lend_book_name.hide()
@@ -1208,16 +1273,16 @@ class Transactions_Screen(QDialog):
         if _user_code == "" or _book_code == "" or _lendDate == "" and not self.ChBox_lend_automatic_date.isChecked():
             showMessageBox("خطا!", "لطفا ابتدا اطلاعات را وارد کنید.", icon="Critical")
             return None
-        
+
         import time
         if self.ChBox_lend_automatic_date.isChecked():
-           _lendDate = time.strftime(f"%Y-%m-%d")
+            _lendDate = time.strftime("%Y-%m-%d")
 
         import sqlite3
         try:
             self.mainwindow.database.Add(
-                "'Transaction'", 
-                "transaction_code,user_id,book_id,state_done,borrowDate", 
+                "'Transaction'",
+                "transaction_code,user_id,book_id,state_done,borrowDate",
                 (str(_transaction_code), str(int(_user_id)), str(int(_book_id)), 0, _lendDate)
             )
             _bC = int(self.mainwindow.database.cur.execute(f"SELECT User.currBorrowedCount from User WHERE User.user_code='{_user_code}';").fetchone()[0])
@@ -1227,7 +1292,6 @@ class Transactions_Screen(QDialog):
             self.mainwindow.database.Update("'Book'", "state_borrowed", 1, "book_code", "=", _book_code)
             self.mainwindow.database.Update("'Book'", "borrowedCount", _bC+1, "book_code", "=", _book_code)
 
-            
             showMessageBox("موفقیت", "مبادله(امانت دادن) کتاب با موفقیت انجام شد.")
             self.mainwindow.database._ExpireCache(hard=True)
             self._deselectUser()
@@ -1237,7 +1301,7 @@ class Transactions_Screen(QDialog):
         except sqlite3.IntegrityError:
             if self.ChBox_automatic_code.isChecked():
                 self.Lend()
-        
+
     def Retrieve(self):
         _retrieveDate = self.input_retrieve_date.text()
         _transaction_code = self.lbl_retrieve_transaction_code.text()
@@ -1251,16 +1315,16 @@ class Transactions_Screen(QDialog):
         if not self.__item_is_selected:
             showMessageBox("خطا!", "لطفا ابتدا یک مبادله را انتخاب کنید.", icon="Critical")
             return None
-        if self._selected_transaction_state_done == True:
+        if self._selected_transaction_state_done:
             showMessageBox("خطا!", "مبادله ی انتخاب شده قبلا تحویل گرفته شده.", icon="Critical")
             return None
         if _retrieveDate == "" and not self.ChBox_retrieve_automatic_date.isChecked():
             showMessageBox("خطا!", "لطفا ابتدا تاریخ را وارد کنید.", icon="Critical")
             return None
-        
+
         import time
         if self.ChBox_retrieve_automatic_date.isChecked():
-           _retrieveDate = time.strftime(f"%Y-%m-%d")
+            _retrieveDate = time.strftime("%Y-%m-%d")
 
         self.mainwindow.database.Update("'User'", "state_hasBorrowed", 0, "id", "=", _user_id)
         self.mainwindow.database.Update("'Book'", "state_borrowed", 1, "id", "=", _book_id)
@@ -1274,7 +1338,7 @@ class Transactions_Screen(QDialog):
     def RenewBook(self):
         _bookRenewAmount = self.input_bookRenew_amount.currentText()
         _transaction_code = self.lbl_bookRenew_transaction_code.text()
-        
+
         ـstate_done = self.mainwindow.database.cur.execute(f"SELECT 'Transaction'.state_done from 'Transaction' WHERE 'Transaction'.transaction_code='{_transaction_code}';").fetchone()[0]
 
         if ـstate_done == 1:
@@ -1283,26 +1347,31 @@ class Transactions_Screen(QDialog):
         if self.input_bookRenew_amount.currentIndex() == 0:
             showMessageBox("خطا!", "لطفا ابتدا مدت تمدید را انتخاب کنید.", icon="Critical")
             return None
-        if self._selected_transaction_state_done == True:
+        if self._selected_transaction_state_done:
             showMessageBox("خطا!", "مبادله ی انتخاب شده تحویل گرفته شده.", icon="Critical")
             return None
 
         _renewCount = self.mainwindow.database.cached_sql_show("Transaction", all=False, column="renewCount", condition_columns=["transaction_code"], condition_values=[_transaction_code],  condition_oprs=["="])[1][0]
         _renewCount = int(_renewCount) + int(self.renewAmount_Directives[_bookRenewAmount])
-        
+
         self.mainwindow.database.Update("'Transaction'", "renewCount", _renewCount, "transaction_code", "=", _transaction_code)
         showMessageBox("موفقیت", "مدت امانت مبادله مورد نظر با موفقیت تمدید شد.")
 
 
 # Library Settings PopUp-Screen Class -> LibSettingsDialog UI
 class LibSettingsPage(QDialog):
+    """
+    Backend class for LibrarySettings popup page UI.
+    Startup and manage LibrarySettings popup Window.
+    """
+
     def __init__(self, mainwindow, _IsNewApp=False):
         super().__init__()
         # set main
         self.mainwindow = mainwindow
         # load ui
-        loadUi(f"{current_path}/UI{UI_PATH}/LibSettingsDialog-fa.ui", self)
-        # loadUi(f"{current_path}/LibSettingsDialog-fa.ui", self)
+        loadUi(f"{CURRENT_PATH}/UI{UI_PATH}/LibSettingsDialog-fa.ui", self)
+        # loadUi(f"{CURRENT_PATH}/LibSettingsDialog-fa.ui", self)
 
         # define var
         self.changes = {
@@ -1321,15 +1390,15 @@ class LibSettingsPage(QDialog):
         self.lbl_BookCount = self.findChild(QtWidgets.QLabel, "lbl_BookCount")
 
         # Pre Start
-        if _IsNewApp == False:
+        if not _IsNewApp:
             self._pre_start()
 
         # set Signals/Slots
-        self.btn_save.clicked.connect(lambda : self.Save())
-        self.btn_back.clicked.connect(lambda : self.Back())
+        self.btn_save.clicked.connect(lambda: self.Save())
+        self.btn_back.clicked.connect(lambda: self.Back())
         #
-        self.input_LibName.textChanged.connect(lambda : self._change("input_LibName") if self.changes["input_LibName"] == False else None)
-        self.input_Librarian.textChanged.connect(lambda : self._change("input_Librarian") if self.changes["input_Librarian"] == False else None)
+        self.input_LibName.textChanged.connect(lambda: self._change("input_LibName") if not self.changes["input_LibName"] else None)
+        self.input_Librarian.textChanged.connect(lambda: self._change("input_Librarian") if not self.changes["input_Librarian"] else None)
 
     def _pre_start(self):
         self.btn_save.hide()
@@ -1351,7 +1420,7 @@ class LibSettingsPage(QDialog):
 
     def Save(self):
         _id = self.mainwindow.database.cur.execute("SELECT id FROM Library;").fetchone()[0]
-        
+
         if self.changes["input_LibName"]:
             _new_value = self.input_LibName.text()
             self.mainwindow.database.Update("Library", "Name", _new_value, "id", "=", _id)
@@ -1359,7 +1428,7 @@ class LibSettingsPage(QDialog):
         if self.changes["input_Librarian"]:
             _new_value = self.input_Librarian.text()
             self.mainwindow.database.Update("Library", "Librarian", _new_value, "id", "=", _id)
-        
+
         self.mainwindow._pre_start()
         self.Back()
         showMessageBox("موفقیت", "اطلاعات کتابخانه با موفقیت تغییر داده شد.")
@@ -1385,9 +1454,9 @@ def showMessageBox(title, text, icon="NoIcon", buttons=False, buttonsText=[], ca
         qmb.setIcon(QtWidgets.QMessageBox.Critical)
     if icon == "Question":
         qmb.setIcon(QtWidgets.QMessageBox.Question)
-    
+
     # set buttons on message box
-    if buttons == True:
+    if buttons:
         qmb.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Cancel)
         if len(buttonsText) == 2:
             qmb.button(QtWidgets.QMessageBox.Ok).setText(buttonsText[0]).setFocusPolicy(QtCore.Qt.NoFocus)
@@ -1396,7 +1465,7 @@ def showMessageBox(title, text, icon="NoIcon", buttons=False, buttonsText=[], ca
         if len(buttonsText) == 1:
             qmb.setStandardButtons(QtWidgets.QMessageBox.Ok).setFocusPolicy(QtCore.Qt.NoFocus)
             qmb.button(QtWidgets.QMessageBox.Ok).setText(buttonsText[0]).setFocusPolicy(QtCore.Qt.NoFocus)
-    
+
     # set callback(if needed)
     exe = qmb.exec()
     if exe == QtWidgets.QMessageBox.Ok:
@@ -1409,10 +1478,12 @@ def showMessageBox(title, text, icon="NoIcon", buttons=False, buttonsText=[], ca
 
 
 popup_screens = {
-        "LibSettings" : [0, "Library Settings"],
+        "LibSettings": [0, "Library Settings"],
     }
-def PopUp_Windows(target:str=None, pop=True):
-    if pop == True:
+
+
+def PopUp_Windows(target: str=None, pop=True):
+    if pop:
         popup_widgets.setCurrentIndex(popup_screens[target][0])
         popup_widgets.setWindowTitle(popup_screens[target][1])
         popup_widgets.currentWidget()._pre_start()
@@ -1420,38 +1491,45 @@ def PopUp_Windows(target:str=None, pop=True):
     else:
         popup_widgets.hide()
 
+
 main_screens = {
-        "start"       : 0,
-        "home"        : 1,
-        "book"        : 2,
-        "user"        : 3,
-        "transaction" : 4,
+        "start": 0,
+        "home": 1,
+        "book": 2,
+        "user": 3,
+        "transaction": 4,
     }
-def Switch_Screen(target:str):
+
+
+def Switch_Screen(target: str):
     main_widgets.setCurrentIndex(main_screens[target])
 
+
+# runs when user quits app.
 def app_exit():
     print("Exiting")
     screen_mainwindow.database.sql_close_connection()
 
+
+# start app
 if __name__ == "__main__":
     global all_screens, main_widgets, popup_widgets, screen_mainwindow, screen_book, screen_user, screen_transaction
     app = QApplication(sys.argv)
     main_widgets = QtWidgets.QStackedWidget()
-    
+
     screen_mainwindow = MainWindow()
-    screen_start = Start_Screen(screen_mainwindow)
+    screen_start = StartScreen(screen_mainwindow)
     _isNewApp = screen_mainwindow._IsNewApp()
-    screen_book = Books_Screen(screen_mainwindow, _isNewApp)
-    screen_user = Users_Screen(screen_mainwindow, _isNewApp)
-    screen_transaction = Transactions_Screen(screen_mainwindow, _isNewApp)
+    screen_book = BooksScreen(screen_mainwindow, _isNewApp)
+    screen_user = UsersScreen(screen_mainwindow, _isNewApp)
+    screen_transaction = TransactionsScreen(screen_mainwindow, _isNewApp)
 
     main_widgets.addWidget(screen_start)
     main_widgets.addWidget(screen_mainwindow)
     main_widgets.addWidget(screen_book)
     main_widgets.addWidget(screen_user)
     main_widgets.addWidget(screen_transaction)
-    
+
     main_widgets.setFixedWidth(960)
     main_widgets.setFixedHeight(720)
 
