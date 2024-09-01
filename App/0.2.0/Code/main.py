@@ -186,6 +186,23 @@ class Datebase(SimpleSql.Sql):
         self.sql_update(tableName, targetColumn, newValue, condition_column, condition_opr, condition_value)
         self._ExpireCache(hard=True)
 
+    def init_database(self):
+        _categories = {
+            "عمومی" : "GN",
+            "فلسفه" : "PH",
+            "دین" : "RL",
+            "ادبیات فارسی" : "PL",
+            "ادبیات خارجی" : "FL",
+            "علوم طبیعی" : "NS",
+            "علوم کاربردی" : "AS",
+            "سرگرمی" : "HO",
+            "تاریخ و جغرافیا" : "HG",
+            "هنر" : "AR"
+        }
+
+        for _category in _categories.keys():
+            self.Add("Category", ["Name", "CodeName"], (_category, _categories[_category]))
+
 
 # Main Window Class -> Home UI
 class MainWindow(QMainWindow, QDialog):
@@ -569,7 +586,12 @@ class BooksScreen(QDialog):
             self.info_widgets["delBook"][column].setText(_text)
 
     def _codeCreate(self, _category):
-        _id = f'{self.mainwindow.database.cur.execute("SELECT MAX(id) from Book;").fetchone()[0]:03}'
+        _id = self.mainwindow.database.cur.execute("SELECT MAX(id) from Book;").fetchone()[0]
+        if not _id:
+            _id = "000"
+        else:
+            _id = f"{_id:03}" # normalize id into standard xxx form
+
         query = f"SELECT CodeName from Category WHERE Name = '{_category}';"
         _cat = f"{self.mainwindow.database.cur.execute(query).fetchone()[0]}"
         _num = ""
@@ -611,6 +633,54 @@ class BooksScreen(QDialog):
             showMessageBox("خطا!", "لطفا ابتدا یک کتاب را انتخاب کنید.", icon="Critical")
             return None
         _book_code = self.lbl_delBook_book_code.text()
+
+        _isBorrowed = int(
+            self.mainwindow.database.sql_show(
+                table_name="Book",
+                all=False,
+                columns=["state_borrowed"],
+                condition_columns=["book_code"],
+                condition_values=[_book_code],
+                condition_oprs=["IS"]
+            )[1][0]
+        )
+
+        if _isBorrowed:
+            _book_id = int(
+                self.mainwindow.database.sql_show(
+                    table_name="Book",
+                    all=False,
+                    columns=["id"],
+                    condition_columns=["book_code"],
+                    condition_values=[_book_code],
+                    condition_oprs=["IS"]
+                )[1][0]
+            )
+            _user_id = int(
+                self.mainwindow.database.sql_show(
+                    table_name="Transaction",
+                    all=False,
+                    columns=["user_id"],
+                    condition_columns=["book_id", "state_done"],
+                    condition_values=[_book_id, 0],
+                    condition_oprs=["IS", "IS"],
+                    condition_sep_oprs=["and"]
+                )[1][0]
+            )
+            _user_name = str(
+                self.mainwindow.database.sql_show(
+                    table_name="User",
+                    all=False,
+                    columns=["Name"],
+                    condition_columns=["id"],
+                    condition_values=[_user_id],
+                    condition_oprs=["IS"]
+                )[1][0]
+            )
+
+            showMessageBox("خطا!", f"کتاب مورد نظر در حال حاضر در کتابخانه نیست.\nکتاب توسط کاربر <{_user_name}> امانت گرفته شده.", icon="Critical")
+            return None
+
         self.mainwindow.database.Delete("Book", "book_code", _book_code, "=")
         showMessageBox("موفقیت", "کتاب مورد نظر با موفقیت حذف شد.")
         self._clear(infoBox=True, delBox=True)
@@ -848,7 +918,12 @@ class UsersScreen(QDialog):
             self.info_widgets["renewSub"][column].setText(_text)
 
     def _codeCreate(self):
-        _id = f'{self.mainwindow.database.cur.execute("SELECT MAX(id) from User;").fetchone()[0]:03}'
+        _id = self.mainwindow.database.cur.execute("SELECT MAX(id) from User;").fetchone()[0]
+        if not _id:
+            _id = "000"
+        else:
+            _id = f"{_id:03}" # normalize id into standard xxx form
+        
         _cat = "UID"
         _num = ""
         import random
@@ -898,6 +973,33 @@ class UsersScreen(QDialog):
             showMessageBox("خطا!", "لطفا ابتدا یک عضو را انتخاب کنید.", icon="Critical")
             return None
         _user_code = self.lbl_delUser_user_code.text()
+
+        _hasBorrowed = int(
+            self.mainwindow.database.sql_show(
+                table_name="User",
+                all=False,
+                columns=["state_hasBorrowed"],
+                condition_columns=["user_code"],
+                condition_values=[_user_code],
+                condition_oprs=["IS"]
+            )[1][0]
+        )
+
+        if _hasBorrowed:
+            _currBorrowedCount = int(
+                self.mainwindow.database.sql_show(
+                    table_name="User",
+                    all=False,
+                    columns=["currBorrowedCount"],
+                    condition_columns=["user_code"],
+                    condition_values=[_user_code],
+                    condition_oprs=["IS"]
+                )[1][0]
+            )
+
+            showMessageBox("خطا!", f"حذف کاربر مورد نظر امکان پذیر نیست.\n کاربر در حال حاضر تعداد <{_currBorrowedCount}> کتاب تحویل داده نشده دارد.", icon="Critical")
+            return None
+
         self.mainwindow.database.Delete("User", "user_code", _user_code, "=")
         showMessageBox("موفقیت", "عضو مورد نظر با موفقیت حذف شد.")
         self._clear(infoBox=True, delBox=True, renewBox=True)
@@ -910,7 +1012,7 @@ class UsersScreen(QDialog):
         _subRenewAmount = self.input_renewSub_amount.currentText()
         _user_code = self.lbl_renewSub_user_code.text()
 
-        _targetVal = self.mainwindow.database.cached_sql_show("User", all=False, column="subExpDate", condition_columns=["user_code"], condition_values=[_user_code],  condition_oprs=["="])[1][0]
+        _targetVal = self.mainwindow.database.cached_sql_show("User", all=False, columns=["subExpDate"], condition_columns=["user_code"], condition_values=[_user_code],  condition_oprs=["="])[1][0]
         _targetVal_year = _targetVal.split(" ")[0].split("-")[0]
         _targetVal_month = _targetVal.split(" ")[0].split("-")[1]
         _targetVal_other = _targetVal.split(" ")[0].split("-")[2] + " " + _targetVal.split(" ")[1]
@@ -1351,7 +1453,7 @@ class TransactionsScreen(QDialog):
             showMessageBox("خطا!", "مبادله ی انتخاب شده تحویل گرفته شده.", icon="Critical")
             return None
 
-        _renewCount = self.mainwindow.database.cached_sql_show("Transaction", all=False, column="renewCount", condition_columns=["transaction_code"], condition_values=[_transaction_code],  condition_oprs=["="])[1][0]
+        _renewCount = self.mainwindow.database.cached_sql_show("Transaction", all=False, columns=["renewCount"], condition_columns=["transaction_code"], condition_values=[_transaction_code],  condition_oprs=["="])[1][0]
         _renewCount = int(_renewCount) + int(self.renewAmount_Directives[_bookRenewAmount])
 
         self.mainwindow.database.Update("'Transaction'", "renewCount", _renewCount, "transaction_code", "=", _transaction_code)
@@ -1520,6 +1622,8 @@ if __name__ == "__main__":
     screen_mainwindow = MainWindow()
     screen_start = StartScreen(screen_mainwindow)
     _isNewApp = screen_mainwindow._IsNewApp()
+    if _isNewApp:
+        screen_mainwindow.database.init_database()
     screen_book = BooksScreen(screen_mainwindow, _isNewApp)
     screen_user = UsersScreen(screen_mainwindow, _isNewApp)
     screen_transaction = TransactionsScreen(screen_mainwindow, _isNewApp)
