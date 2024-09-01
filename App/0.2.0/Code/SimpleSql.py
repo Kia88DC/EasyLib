@@ -3,7 +3,7 @@
 # |   By @Kia88DC   |
 # |                 |
 #  -----------------
-__version__ = "3.2.2"
+__version__ = "3.2.3"
 
 
 
@@ -65,7 +65,7 @@ class Sql():
         all = show all of contents (True OR False) \n
         -if False : \n
         --kwargs : \n
-        ---column = the column(s) to show -> <column_name> OR "all" \n
+        ---columns str/[] = the column(s) to show -> [<column_name>,] OR "all" \n
         ---condition_columns  [] = the name of column the condition is on it \n
         ---condition_values   [] = the value for condition \n
         ---condition_oprs     [] = the comparison-oprators for condition e.g: ["=",">"] \n
@@ -79,10 +79,13 @@ class Sql():
             return_value.append(self.data[table_name]["cols"])
         else:
             try :
-                column = kwargs["column"]
-                exe = f"SELECT {column} FROM '{table_name}'"
+                exe = "SELECT"
                 _cols = self.data[table_name]["cols"]
-                return_value.append(_cols[_cols.index(kwargs["column"])])
+                for column in kwargs["columns"]:
+                    exe += f" {column},"
+                    return_value.append(_cols[_cols.index(column)])
+                exe = exe.strip(",")
+                exe += f" FROM '{table_name}'"
             except KeyError:
                 return "Error:  ! Missing Kwargs !"
         
