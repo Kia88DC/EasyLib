@@ -81,9 +81,10 @@ class Sql():
             try :
                 exe = "SELECT"
                 _cols = self.data[table_name]["cols"]
+                return_value.append([])
                 for column in kwargs["columns"]:
                     exe += f" {column},"
-                    return_value.append(_cols[_cols.index(column)])
+                    return_value[0].append(_cols[_cols.index(column)])
                 exe = exe.strip(",")
                 exe += f" FROM '{table_name}'"
             except KeyError:
@@ -124,26 +125,6 @@ class Sql():
         '''
         self.cur.execute(f'UPDATE {table_name} set {column}="{new_value}" WHERE {condition_column}{condition_opr}"{condition_value}"')
         self.con.commit()
-
-    # def _check(self, l, table_name, cond_columns, cond_values, cond_oprs, cond):
-    #     index = self.data[table_name]["cols"].index(cond_columns[cond])
-    #     for row in self.data[table_name]["rows"]:
-    #         print(f"  row={row}")
-    #         if not row[0] in l:
-    #             l[row[0]] = 0
-    #         if cond_oprs[cond] == "=":
-    #             if row[index] == cond_values[cond]:
-    #                 l[row[0]] += 1
-    #         elif cond_oprs[cond] == "!=":
-    #             if row[index] != cond_values[cond]:
-    #                 l[row[0]] += 1
-    #         elif cond_oprs[cond] == ">":
-    #             if row[index] > cond_values[cond]:
-    #                 l[row[0]] += 1
-    #         elif cond_oprs[cond] == "<":
-    #             if row[index] < cond_values[cond]:
-    #                 l[row[0]] += 1
-    #     return l
 
     def sql_delete_row(self, table_name:str, condition=False, **kwargs):
         '''
