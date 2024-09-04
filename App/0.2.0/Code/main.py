@@ -202,6 +202,8 @@ class Datebase(SimpleSql.Sql):
 
         for _category in _categories.keys():
             self.Add("Category", ["Name", "CodeName"], (_category, _categories[_category]))
+        
+        self.Add("App", ["Field", "Data"], ("DatabaseInstantiated", "True"))
 
 
 # Main Window Class -> Home UI
@@ -217,15 +219,19 @@ class MainWindow(QMainWindow, QDialog):
 
         # Start Local DataBase Connection
         self._all_DB_Tables = {
-            "All": ["Library", "Category", "Book", "User", "Transaction"],
+            "All": ["App", "Library", "Category", "Book", "User", "Transaction"],
             "AllInstances": {},
-            "Category": {
-                "table": "'id' INTEGER PRIMARY KEY AUTOINCREMENT, 'Name' TEXT NOT NULL UNIQUE, 'CodeName' TEXT NOT NULL UNIQUE",
-                "columns": ["id", "Name", "CodeName"]
+            "App": {
+                "table": "'id' INTEGER PRIMARY KEY, 'Field' TEXT, 'Data' TEXT DEFAULT '-', 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP",
+                "columns": ["id", "Field", "Data"]
             },
             "Library": {
                 "table": "'id' INTEGER PRIMARY KEY, 'Name' TEXT DEFAULT '-', 'Librarian' TEXT DEFAULT '-', 'bookCount' INTEGER DEFAULT 0, 'userCount' INTEGER DEFAULT 0, 'created_at' TEXT DEFAULT CURRENT_TIMESTAMP",
                 "columns": ["id", "Name", "Librarian", "bookCount", "userCount"]
+            },
+            "Category": {
+                "table": "'id' INTEGER PRIMARY KEY AUTOINCREMENT, 'Name' TEXT NOT NULL UNIQUE, 'CodeName' TEXT NOT NULL UNIQUE",
+                "columns": ["id", "Name", "CodeName"]
             },
             "Book": {
                 # "table": "id INTEGER PRIMARY KEY,title TEXT,author TEXT,category TEXT,book_code TEXT,state_borrowed INTEGER,borrowedCount INTEGER,created_at TEXT",
@@ -336,6 +342,16 @@ class MainWindow(QMainWindow, QDialog):
         if _libCount == 0:
             return True
         elif _libCount > 0:
+            return False
+
+    def _DatabaseInstantiated(self):
+        _instantiated = self.database.cur.execute(
+            "SELECT Data FROM App WHERE Field is 'DatabaseInstantiated';"
+        ).fetchone()
+        print(f"_instantiated:{_instantiated}")
+        if _instantiated:
+            return True
+        else:
             return False
 
 
@@ -1623,7 +1639,8 @@ if __name__ == "__main__":
     screen_start = StartScreen(screen_mainwindow)
     _isNewApp = screen_mainwindow._IsNewApp()
     if _isNewApp:
-        screen_mainwindow.database.init_database()
+        if not screen_mainwindow._DatabaseInstantiated():
+            screen_mainwindow.database.init_database()
     screen_book = BooksScreen(screen_mainwindow, _isNewApp)
     screen_user = UsersScreen(screen_mainwindow, _isNewApp)
     screen_transaction = TransactionsScreen(screen_mainwindow, _isNewApp)
